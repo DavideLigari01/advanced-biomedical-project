@@ -92,7 +92,7 @@ def extract_features(dir_path, label, frame_length, sample_rate=44100, n_mfcc=13
     Returns:
     - features (list): List of tensors containing features for each audio file.
     """
-        
+     
     filenames = os.listdir(dir_path)
     filenames = [file for file in filenames if not file.startswith('.')]
     frame_length = int(1/frame_length)
@@ -111,6 +111,7 @@ def extract_features(dir_path, label, frame_length, sample_rate=44100, n_mfcc=13
         orig_sample_rate_tmp = int(orig_sample_rate/frame_length)
         audio_length = int(max(audio[0].shape) / (orig_sample_rate_tmp)) # Length of the audio in half seconds. Discard the remainder.
 
+        sample_rate = orig_sample_rate
         # Check the sample rate of the audio. If different from the desired sample rate, raise an error
         #if orig_sample_rate != sample_rate:
         #    raise ValueError(f"Sample rate of the audio {file} is {orig_sample_rate} Hz. It should be {sample_rate} Hz.\nPlease resample using the provided function 'check_resample_sample_rate'.")
