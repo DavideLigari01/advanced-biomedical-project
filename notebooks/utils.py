@@ -157,10 +157,8 @@ def extract_features(dir_path, label, frame_length, sample_rate=44100, n_mfcc=13
         # Stack the MFCC features into a single tensor
         features_local = torch.stack(features_local, dim=0) 
         # attach the label in the last column
-        if label == 0:
-            features_local = torch.cat((features_local, torch.zeros(features_local.shape[0], 1)), dim=1)
-        else:
-            features_local = torch.cat((features_local, torch.ones(features_local.shape[0], 1)), dim=1)
+        
+        features_local = torch.cat((features_local, torch.ones(features_local.shape[0], 1)*label), dim=1)
         # attach the filename in the last column
         features_local = torch.cat((features_local, torch.full((features_local.shape[0], 1), filenames.index(file))), dim=1)
         
