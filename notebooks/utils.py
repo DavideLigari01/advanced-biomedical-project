@@ -9,7 +9,8 @@ import torchaudio.transforms as T
 import librosa
 from tqdm.notebook import tqdm
 import numpy as np
-
+import random
+import shutil
 
 # ----------------- Functions ---------------------------
 
@@ -351,5 +352,155 @@ def extract_zero_crossing_rate(audio):
     return zcr.unsqueeze(0)
 
 
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+def generate_samples(dir, target_num, noise_factor, speed_factor, pitch_factor, marker=''):
+	"""
+	Generate additional audio samples to balance the dataset.
+
+	This function generates additional audio samples by applying noise, speed, and pitch modifications to the existing audio files in a directory.
+
+	Args:
+		dir (str): The directory path where the audio files are located.
+		target_num (int): The desired number of audio samples to generate.
+		noise_factor (list): A list representing the range of noise factors to apply to the audio files.
+		speed_factor (list): A list representing the range of speed factors to apply to the audio files.
+		pitch_factor (list): A list representing the range of pitch factors to apply to the audio files.
+		marker (str, optional): A marker to append to the generated file names. Defaults to ''.
+
+	Returns:
+		None
+	"""
+	files = os.listdir(dir)
+	num_files = len(files)
+	to_generate = target_num - num_files
+ 
+	if to_generate <= 0:
+		print(f'No need to generate samples for {dir} directory')
+		return
+	else:
+		percent = to_generate / num_files * 100
+		# warn the user about the percentage of the data to be generated
+		print(f'Generating {to_generate} samples ({percent:.2f}%) for {dir} directory')
+
+	to_generate_noise = to_generate // 3
+	to_generate_speed = to_generate // 3
+	to_generate_pitch = to_generate - to_generate_noise - to_generate_speed
+
+	try:
+		files_noisy = random.sample(files, k=to_generate_noise) # sample without replacement
+	except:
+		files_noisy = random.choices(files, k=to_generate_noise) # sample with replacement
+		# multiple names can be the same. This may lead to overwriting the files thus not reaching the target number of files.
+		
+	try:
+		files_speed = random.sample(files, k=to_generate_speed)
+	except:
+		files_speed = random.choices(files, k=to_generate_speed)
+	try:
+		files_pitch = random.sample(files, k=to_generate_pitch)
+	except:
+		files_pitch = random.choices(files, k=to_generate_pitch)
+
+	print('Generating noisy audio samples')
+	for i, file in enumerate(files_noisy):
+		noise_factor_ = random.uniform(noise_factor[0], noise_factor[1])
+		audio, sr = torchaudio.load(dir + file)
+		audio = audio.mean(0).reshape(1, -1).numpy()[0]
+		noise = np.random.randn(len(audio)) * noise_factor_
+		noisy_audio = audio + noise
+		torchaudio.save(dir + f'noisy_{i}' + marker + file, torch.tensor(noisy_audio).unsqueeze(0), sr)
+		# the {i} solves the issue of overwriting the files thus maintaining the desired number of files
+
+	print('Generating speed audio samples')
+	for i, file in enumerate(files_speed):
+		speed_factor_ = random.uniform(speed_factor[0], speed_factor[1])
+		audio, sr = torchaudio.load(dir + file)
+		audio = audio.mean(0).reshape(1, -1).numpy()[0]
+		audio_speed = librosa.effects.time_stretch(audio, rate=speed_factor_)
+		torchaudio.save(dir + f'speed_{i}' + marker + file, torch.tensor(audio_speed).unsqueeze(0), sr)
+
+	print('Generating pitch audio samples')
+	for i, file in enumerate(files_pitch):
+		pitch_factor_ = random.uniform(pitch_factor[0], pitch_factor[1])
+		audio, sr = torchaudio.load(dir + file)
+		audio = audio.mean(0).reshape(1, -1).numpy()[0]
+		audio_pitch = librosa.effects.pitch_shift(audio, sr=sr, n_steps=pitch_factor_)
+		torchaudio.save(dir + f'pitch_{i}' + marker + file, torch.tensor(audio_pitch).unsqueeze(0), sr)
+
+	print('Done!')
+ 
+ 
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+ 
+ 
+def remove_generated_samples(dir, marker):
+	"""
+	Remove the generated audio samples from the directory.
+
+	This function removes the audio samples that were generated using the generate_samples function from the directory.
+
+	Args:
+		dir (str): The directory path where the audio files are located.
+		marker (str): The marker used to identify the generated files.
+
+	Returns:
+		None
+	"""
+	files = os.listdir(dir)
+	generated_files = [file for file in files if marker in file]
+
+	for file in generated_files:
+		os.remove(dir + file)
+
+	print(f'Removed {len(generated_files)} generated samples from {dir} directory')
+ 
+ 
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+def get_move_outliers(src_dir, out_dir, classname, outliers, audio_info, move=False):
+    """
+    Get outliers for a given class and move them to the outliers folder.
+
+    Parameters:
+    src_dir (str): The source directory where the audio files are located.
+    classname (str): The name of the class for which outliers are to be retrieved.
+    move (bool, optional): Flag indicating whether to move the outliers to the outliers folder. 
+                           Defaults to False.
+
+    Returns:
+    out (list): A list of filenames of the outliers for the given class.
+    """
+    
+    out = outliers[outliers['label']==classname]['filename'].to_list()
+    print(f'{classname} outliers {out}')
+    print(f'number of {classname} outliers {len(out)}')
+
+    # drop the outliers for {classname}
+    audio_info_outliers = audio_info[~audio_info['filename'].isin(out)]
+
+    print('directory size', len(os.listdir(src_dir)))
+
+    if move == False:
+        return out
+    elif move == True:
+        
+        # move the outliers to the outliers folder using shutil
+        os.makedirs(out_dir + classname, exist_ok=True)
+        for file in out:
+            shutil.move(src_dir + file, out_dir + classname)
+
+        print('post-removal directory size', len(os.listdir(src_dir)))
+        return out
+    else:
+        print('Invalid move value. Please enter True or False')
+        return None
+    
+    
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
