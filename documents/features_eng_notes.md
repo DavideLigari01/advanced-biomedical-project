@@ -19,6 +19,6 @@ The situation is shown in the figure below.
 
 **How can we balance the classes?**
 We can follow to strategies, not mutually exclusive:
-- **A Priori Balancing**: We can work on the raw audio, prior to the features extraction, and balance the classes by cutting the audio or performing data augmentation.
+- **A Priori Balancing**: We can work on the raw audio, prior to the features extraction, and balance the classes by cutting the audio, removing outliers or performing data augmentation.
 - **A Posteriori Balancing**: We can work on the features, after the extraction, and balance the classes by exploiting oversampling and/or undersampling techniques.
 
