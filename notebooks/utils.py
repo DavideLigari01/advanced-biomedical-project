@@ -15,6 +15,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 from scipy.stats import spearmanr
+from imblearn.over_sampling import RandomOverSampler
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.over_sampling import SMOTEN
+from collections import Counter
 
 # ----------------- Functions ---------------------------
 
@@ -655,3 +659,78 @@ def detect_outliers_iqr(
     outliers_df = data_df[outliers_mask.any(axis=1)]
 
     return outliers_df
+
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+def rebalance_data(data_to_balance: np.array, target_size: int, random_seed: int = 42) -> np.array:
+    """
+    Rebalances the data by oversampling or undersampling the classes based on the target size.
+     
+    Parameters:
+    - data_to_balance: (np.array) representing the data to be rebalanced (X,y,filename).
+    - target_size (int): The desired size for each class after rebalancing.
+    - random_seed (int): The random seed for reproducibility.
+    
+    Returns:
+    - data_rebalanced: Rebalanced data, where each data element is a numpy array.
+    """
+    
+    random.seed(random_seed)
+    
+    # Extract the data and the labels
+    X = data_to_balance[:,:-2]
+    y = data_to_balance[:,-2]
+    filenames = data_to_balance[:,-1]
+    
+    X = np.hstack((X, filenames.reshape(-1,1)))
+    
+    # Get the unique classes and their counts
+    unique_classes, class_counts = np.unique(y, return_counts=True)
+    
+    # check the classes to be undersampled or oversampled
+    classes_to_undersample = unique_classes[class_counts > target_size]
+    classes_to_oversample = unique_classes[class_counts < target_size]
+    
+    # Initialize the undersampler and oversampler
+    undersampler = RandomUnderSampler(sampling_strategy={class_: target_size for class_ in classes_to_undersample}, random_state=random_seed)
+    oversampler = SMOTEN(sampling_strategy={class_: target_size for class_ in classes_to_oversample}, random_state=random_seed)
+    
+    # get the data to be undersampled
+    X_to_undersample = X[np.isin(y, classes_to_undersample)]
+    X_to_oversample = X[np.isin(y, classes_to_oversample)]
+    
+    # get the labels to be undersampled
+    y_to_undersample = y[np.isin(y, classes_to_undersample)]
+    y_to_oversample = y[np.isin(y, classes_to_oversample)]
+    
+    # undersample the data
+    try:
+        X_undersampled, y_undersampled = undersampler.fit_resample(X_to_undersample, y_to_undersample)
+    except:  #when only one class is undersampled
+        X_undersampled = np.array(random.sample(list(X_to_undersample), target_size))
+        y_undersampled = np.array(random.sample(list(y_to_undersample), target_size))
+        
+    X_oversampled, y_oversampled = oversampler.fit_resample(X_to_oversample, y_to_oversample)
+    
+    # detach the filenames
+    filenames_undersampled = X_undersampled[:,-1]
+    filenames_oversampled = X_oversampled[:,-1]
+    
+    # remove the filenames from the data
+    X_undersampled = X_undersampled[:,:-1]
+    X_oversampled = X_oversampled[:,:-1]
+    
+    # concatenate the data
+    data_oversampled = np.hstack((X_oversampled, y_oversampled.reshape(-1,1), filenames_oversampled.reshape(-1,1)))
+    data_undersampled = np.hstack((X_undersampled, y_undersampled.reshape(-1,1), filenames_undersampled.reshape(-1,1)))
+    full_data = np.vstack((data_oversampled, data_undersampled))
+    
+    return full_data
+    
+    
+    
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
