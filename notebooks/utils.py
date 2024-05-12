@@ -383,6 +383,7 @@ def generate_samples(
     speed_factor: list,
     pitch_factor: list,
     marker: str = "",
+    random_seed: int = 42,
 ) -> None:
     """
     Generate additional audio samples to balance the dataset.
