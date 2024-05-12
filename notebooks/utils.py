@@ -734,3 +734,272 @@ def rebalance_data(data_to_balance: np.array, target_size: int, random_seed: int
     
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
+
+
+def create_dataset(full_data: list, labels_col: int=-2) -> torch.utils.data.dataset.TensorDataset:
+    """
+    Create a dataset from the data of the real and fake audio files. Convert tensor to a dataset using the columns (:,:-idx_filenames) as data and the column (;, -idx_filenames) as the label.
+
+    Args:
+    - data (torch.Tensor): The input data tensor containing the data of the real and fake audio files.
+    - idx_filenames (int): The index of the label column in the tensor. Default is 2.
+
+    Returns:
+    - data (torch.utils.data.dataset.TensorDataset): The dataset containing the data of the real and fake audio files.
+    """
+    
+    datasets = []
+    
+    for data in full_data:
+        data = torch.utils.data.TensorDataset(data[:, :labels_col].type(torch.float), data[:, labels_col].type(torch.LongTensor))
+        datasets.append(data)
+        
+    return datasets
+
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+def get_dataloaders(full_dataset: list, batch_size: int, shuffling: list=[True, False, False]) -> torch.utils.data.DataLoader:
+        """
+        Get the dataloaders for the training, validation, and test sets.
+
+        Args:
+        - full_dataset (list): A list containing the datasets for training, validation, and test.
+        - batch_size (int): The batch size for the dataloaders.
+        - shuffling (list, optional): A list of boolean values indicating whether to shuffle the data for each dataset. 
+            The length of the list should be equal to the number of datasets in full_dataset. 
+            Default is [True, False, False].
+
+        Returns:
+        - dataloaders (list): A list containing the training, validation, and test dataloaders.
+        """
+        
+        shuffling = shuffling
+        dataloaders = []
+        
+        for i, dataset in enumerate(full_dataset):
+                dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=shuffling[i])
+                dataloaders.append(dataloader)
+        
+        return dataloaders
+    
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+def get_device():
+     '''
+     Return the device to be used for training
+     '''
+ 
+     dev = (
+     "cuda"
+     if torch.cuda.is_available()
+     #else "mps"
+     #if torch.backends.mps.is_available()
+     else "cpu"
+     )
+     print(f"Using {dev} device")
+
+     return torch.device(dev)
+ 
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+def train_model(dataloader, model, loss_fn, optimizer, device, get_loss_acc=False):
+     ''' Training loop.
+     This function trains the model for one epoch, iterating over the dataloader batches and using the optimizer to update the model's weights.
+     It also computes the loss and accuracy 5 times and appends the values to the lists loss_list and acc_list.
+     ----------
+     dataloader: torch.utils.data.DataLoader, training data
+     model: torch.nn.Module, neural network
+     loss_fn: loss function
+     optimizer: torch.optim, optimizer
+     device: torch.device, device to be used for training
+     ----------
+     Returns if get_loss_acc is True:
+     loss_list: list, loss values
+     acc_list: list, accuracy values
+     
+     The values are appended to the lists 5 times during the epoch
+     ----------
+     '''
+ 
+     #model = model.to(device)
+     loss_list = []
+     acc_list = []
+ 
+     size = len(dataloader.dataset) # number of samples
+     num_batches = len(dataloader) # number of batches
+ 
+     model.train()
+     for batch, (X, y) in enumerate(dataloader):
+          X, y = X.to(device), y.to(device)
+
+          # Compute prediction error
+          pred = model(X)
+          loss = loss_fn(pred, y)
+
+          # Backpropagation
+          loss.backward()
+          optimizer.step()
+          optimizer.zero_grad()
+
+          # Print the progress 1 times during the epoch
+          if batch % (num_batches//1) == 0:
+               loss_val, acc = 0, 0
+               loss_val, current = loss.item(), (batch + 1) * len(X)
+               acc = (pred.argmax(1) == y).type(torch.float).sum().item()/len(y)*100
+               
+               if get_loss_acc:
+                    loss_list.append(loss_val)
+                    acc_list.append(acc)
+
+               print(f"loss: {loss:>7f} - acc: {acc:2.2f}% [{current:>5d}/{size:>5d}]")
+     
+     if get_loss_acc:
+          return loss_list, acc_list
+
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+def test_model(dataloader, model, loss_fn, device, get_loss_acc=False):
+     ''' Evaluation loop.
+     This function evaluates the model on the evaluation data, iterating over the dataloader batches.
+     It also computes the loss and accuracy 5 times and appends the values to the lists loss_list and acc_list.
+     ----------
+     dataloader: torch.utils.data.DataLoader, evaluation data
+     model: torch.nn.Module, neural network
+     loss_fn: loss function
+     device: torch.device, device to be used for evaluation
+     ----------
+     Returns if get_loss_acc is True:
+     loss_list: list, loss values
+     acc_list: list, accuracy values
+ 
+     The values are appended to the lists 5 times during the epoch
+     ----------
+     '''
+
+     #model = model.to(device)
+     
+     size = len(dataloader.dataset) # number of samples
+     num_batches = len(dataloader) # number of batches
+     batch_size = dataloader.batch_size
+ 
+     # Set the model in evaluation mode
+     model.eval()
+     test_loss, acc = 0, 0
+     loss_list = []
+     acc_list = []
+ 
+     # Disable gradient computation for efficiency
+     with torch.no_grad():
+          for batch, (X, y) in enumerate(dataloader):
+               X, y = X.to(device), y.to(device)
+               pred = model(X)
+               test_loss += loss_fn(pred, y).item()
+
+               # Compute the accuracy
+               acc += (pred.argmax(1) == y).type(torch.float).sum().item()
+
+               if get_loss_acc and batch % (num_batches//1) == 0:
+                    loss_list.append(test_loss/(batch+1))
+                    acc_list.append(acc*100/((batch+1)*batch_size))
+
+     test_loss /= num_batches
+     acc /= size
+     print(f"Test Error: \n Accuracy: {(100*acc):>0.1f}%, Avg loss: {test_loss:>8f} \n")
+ 
+     if get_loss_acc:
+          return loss_list, acc_list
+
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+def fit_model(epochs, train_dl, test_dl, model, loss_func, optimizer, device, model_path_store, path_to_store=None, get_loss_acc=False, evaluation_epochs = 10, checkpoint_epochs=5):
+     ''' Training and evaluation loop.
+     This function trains the model for the specified number of epochs and evaluates it on the test data.
+     It also computes the loss and accuracy 5 times and appends the values to the lists train_loss_list, train_acc_list, test_loss_list, test_acc_list.
+     ----------
+     epochs: int, number of epochs
+     train_dl: torch.utils.data.DataLoader, training data
+     test_dl: torch.utils.data.DataLoader, test data
+     model: torch.nn.Module, neural network
+     loss_fn: loss function
+     optimizer: torch.optim, optimizer
+     device: torch.device, device to be used for training
+     model_path_store: path to store the model with the best loss
+     path_to_store: path to store the model and optimizer parameters. If None, the model is not saved. 
+     get_loss_acc: bool, return loss and accuracy values
+     checkpoint_epochs: int, number of epochs between each checkpoint
+     ----------
+     Returns if get_loss_acc is True:
+     train_loss_list: list, training loss values
+     train_acc_list: list, training accuracy values
+     test_loss_list: list, test loss values
+     test_acc_list: list, test accuracy values
+     ----------
+     '''
+     
+     # timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+     # writer = SummaryWriter('runs/fashion_trainer_{}'.format(timestamp))
+ 
+     train_loss_list, train_acc_list = [], []
+     test_loss_list, test_acc_list = [], []
+     best_loss = 10000000
+     model = model.to(device)
+     
+     for epoch in tqdm(range(epochs)):
+          train_loss, train_acc = train_model(train_dl, model, loss_func, optimizer, device, get_loss_acc=True)
+          
+          
+          # Log the running loss averaged per batch
+          # for both training and validation
+          # writer.add_scalars('Training vs. Validation Loss',
+          #           { 'Training' : train_loss, 'Validation' : train_loss },
+          #           epoch + 1)
+          # writer.flush()
+     
+
+          if epoch % evaluation_epochs == 0:
+               print(f"Epoch {epoch+1}\n-------------------------------")
+               # Train
+               train_loss_list.extend(train_loss)
+               train_acc_list.extend(train_acc)
+
+               # Evaluation
+               test_loss, test_acc = test_model(test_dl, model, loss_func, device, get_loss_acc=True)
+               test_loss_list.extend(test_loss)
+               test_acc_list.extend(test_acc)
+               
+               # Save the model with the best loss
+               if test_loss[-1] < best_loss:
+                    best_loss = test_loss[-1]
+                    model_scripted = torch.jit.script(model) # Export to TorchScript
+                    model_scripted.save(model_path_store + '_best_loss.pth')
+                    #torch.save(model.state_dict(), model_path_store + '_best_loss.pth')
+   
+          # Save parameters in case of interruption prior to completion
+          if epoch % checkpoint_epochs == 0 and path_to_store:
+               checkpoint_info = {'epoch': epoch, 'model_state_dict': model.state_dict(), 'optimizer_state_dict': optimizer.state_dict(), 'loss': train_loss}
+               torch.save(checkpoint_info, path_to_store)
+     
+     print("Done!")
+
+     return train_loss_list, train_acc_list, test_loss_list, test_acc_list
+
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
