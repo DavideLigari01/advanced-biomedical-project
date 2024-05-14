@@ -97,6 +97,7 @@ def extract_features(
     sample_rate: int = 44100,
     n_mfcc: int = 13,
     melkwargs: dict = {},
+    n_cqt: int = 84,
 ) -> list:
     """
     Extracts audio features (MFCC, chroma, RMS, spectral centroid, spectral bandwidth, spectral rolloff, zero-crossing rate)
@@ -109,7 +110,8 @@ def extract_features(
         sample_rate (int, optional): The sample rate of the audio files. Defaults to 44100 Hz.
         n_mfcc (int, optional): The number of Mel-frequency cepstral coefficients (MFCCs) to extract. Defaults to 13.
         melkwargs (dict, optional): Additional arguments for Mel spectrogram computation.
-
+        n_cqt (int, optional): The number of constant-Q transform (CQT) bins to extract. Defaults to 84.
+        
     Returns:
         list: A list containing tensors of extracted features for each audio file.
     """
@@ -149,10 +151,11 @@ def extract_features(
             spec_bw = extract_spectral_bandwidth(audio_mono, sample_rate)
             rolloff = extract_spectral_rolloff(audio_mono, sample_rate)
             zcr = extract_zero_crossing_rate(audio_mono)
+            cqt = extract_cqt(audio_mono, sample_rate, n_cqt)
 
             # Concatenate the features
             features_tmp = torch.cat(
-                (mfcc_features_tmp, chroma_stft, rms, spec_cent, spec_bw, rolloff, zcr),
+                (mfcc_features_tmp, chroma_stft, cqt, rms, spec_cent, spec_bw, rolloff, zcr),
                 dim=0,
             )
             features_local.append(features_tmp)
@@ -227,7 +230,7 @@ def save_features(data: torch.Tensor, path: str, name: str) -> None:
 
 
 def extract_mfcc(
-    audio: torch.Tensor, sample_rate: int, n_mfcc: int, melkwargs: dict
+    audio: torch.Tensor, sample_rate: int, n_mfcc: int, melkwargs: dict = {}
 ) -> torch.Tensor:
     """
     Extract MFCC features from audio files. It takes the directory path containing the audio files and returns a list of tensors containing MFCC features for each audio file.
@@ -269,9 +272,11 @@ def extract_chroma_stft(audio: torch.Tensor, sample_rate: int) -> torch.Tensor:
     Returns:
     - chroma_stft (torch.Tensor): The Chroma STFT features of the audio file.
     """
-    chroma_stft = np.mean(librosa.feature.chroma_stft(y=audio.numpy(), sr=sample_rate))
+    #chroma_stft = np.mean(librosa.feature.chroma_stft(y=audio.numpy(), sr=sample_rate))
+    chroma_stft = np.mean(librosa.feature.chroma_stft(y=audio.numpy(), sr=sample_rate), axis=2)
+
     chroma_stft = torch.tensor(chroma_stft)
-    return chroma_stft.unsqueeze(0)
+    return chroma_stft.reshape(-1)
 
 
 # --------------------------------------------------------------------
@@ -374,6 +379,27 @@ def extract_zero_crossing_rate(audio: torch.Tensor) -> torch.Tensor:
     zcr = np.mean(librosa.feature.zero_crossing_rate(audio.numpy()))
     zcr = torch.tensor(zcr)
     return zcr.unsqueeze(0)
+
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+def extract_cqt(audio: torch.Tensor, sample_rate: int, n_cqt: int = 84) -> torch.Tensor:
+    """
+    Extract Constant-Q Transform (CQT) features from an audio file.
+
+    Args:
+    - audio (torch.Tensor): The audio file.
+    - sample_rate (int): The sample rate of the audio file.
+    - n_cqt (int): The number of CQT bins to compute. Default is 84.
+
+    Returns:
+    - cqt (torch.Tensor): The CQT features of the audio file.
+    """
+    cqt = np.mean(librosa.cqt(y=audio.numpy(), sr=sample_rate, n_bins=n_cqt), axis=2)
+    cqt = torch.tensor(cqt)
+    return cqt.reshape(-1)
 
 
 # --------------------------------------------------------------------
