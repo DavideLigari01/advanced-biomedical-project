@@ -1003,3 +1003,72 @@ def fit_model(epochs, train_dl, test_dl, model, loss_func, optimizer, device, mo
 
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
+
+
+def resample_audio(sample: np.array, orig_freq: int, new_freq: int) -> np.array:
+    """
+    Resamples an audio sample from the original frequency to a new frequency.
+
+    Args:
+        sample (array-like): The audio sample to be resampled.
+        orig_freq (int): The original frequency of the audio sample.
+        new_freq (int): The new frequency to resample the audio sample to.
+
+    Returns:
+        array-like: The resampled audio sample.
+
+    """
+    resampler = T.Resample(orig_freq=orig_freq, new_freq=new_freq)
+    sample_resampled = resampler(sample)
+    return sample_resampled
+
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+
+def check_resample_sample_rate(target_freq: int, src_dir: str, dest_dir: str = None, overwrite: bool=False) -> None:
+    """
+    Check if all files in the source directory have the same sample rate.
+    If not resample the audio to the target sample rate and save it in the destination directory if overwrite is set to False.
+    Otherwise, overwrite the original file with the resampled audio.
+
+    Parameters:
+    - target_freq (int): The target sample rate to check against.
+    - src_dir (str): The directory path where the audio files are located.
+    - dest_dir (str): The directory path where the resampled audio files will be saved.
+    - overwrite (bool, optional): Whether to overwrite the original file with the resampled audio. 
+      If set to False, the resampled audio will be saved with a new filename.
+
+    Returns:
+    None
+    """
+    
+    # get filenames
+    filenames = os.listdir(src_dir)
+    # remove hidden files
+    filenames = [file for file in filenames if not file.startswith('.')]
+    
+    for filename in tqdm(filenames):
+        sample, orig_freq = torchaudio.load(src_dir+filename)
+        if orig_freq != target_freq:
+            print(f"Resampling {filename} from {orig_freq} Hz to {target_freq} Hz...")
+            resampled = resample_audio(sample, orig_freq, target_freq)
+
+            if overwrite:
+                # Save the resampled audio
+                torchaudio.save(src_dir+filename, resampled, target_freq)
+                print(f"Completed.")
+                
+            else:
+                if dest_dir is None:
+                    raise ValueError("Destination directory must be specified.")
+                if not os.path.exists(dest_dir):
+                    os.makedirs(dest_dir)
+                torchaudio.save(dest_dir+filename, resampled, target_freq)
+                print(f"Completed.")
+                
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
