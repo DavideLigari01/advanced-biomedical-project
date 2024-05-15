@@ -9,10 +9,6 @@
     - One model per feature
 
 
-3. **A posteriori balancing**:
-
-
-
 4. **Improve performance**:
    - [ ] Murmirs Normal and Extrastoles are often missclassified, identify additional features to discriminate them
 
