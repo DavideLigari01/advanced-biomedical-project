@@ -409,7 +409,7 @@ def extract_cqt(audio: torch.Tensor, sample_rate: int, n_cqt: int = 84) -> torch
     Returns:
     - cqt (torch.Tensor): The CQT features of the audio file.
     """
-    cqt = np.mean(librosa.cqt(y=audio.numpy(), sr=sample_rate, n_bins=n_cqt), axis=2)
+    cqt = np.abs(np.mean(librosa.cqt(y=audio.numpy(), sr=sample_rate, n_bins=n_cqt), axis=2)) # abs to deal with complex numbers
     cqt = torch.tensor(cqt)
     return cqt.reshape(-1)
 
