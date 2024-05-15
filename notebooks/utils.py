@@ -1200,14 +1200,10 @@ def remove_highly_correlated_features(
                 correlation_matrix_comp.loc[candidates, target_variable].abs().idxmax()
             )
             features_to_remove.update(candidates.difference([best]))
-            print(
-                f"Feature {feature} has {correlated_count} highly correlated features"
-            )
-            print(f"Best feature: {best}")
-            print(f"Removing {candidates.difference([best])} from {feature}\n")
 
     # Remove the highly correlated features
     print(f"Removing {len(features_to_remove)} features")
+    print(features_to_remove)
     filtered_features = [
         feat
         for feat in correlation_matrix_comp.columns
