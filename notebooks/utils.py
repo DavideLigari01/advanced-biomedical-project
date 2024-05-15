@@ -147,12 +147,12 @@ def extract_features(
             # Get the MFCC features
             mfcc_features_tmp = extract_mfcc(audio_mono, sample_rate, n_mfcc, melkwargs)
             chroma_stft = extract_chroma_stft(audio_mono, sample_rate)
+            cqt = extract_cqt(audio_mono, sample_rate, n_cqt)
             rms = extract_rms(audio_mono)
             spec_cent = extract_spectral_centroid(audio_mono, sample_rate)
             spec_bw = extract_spectral_bandwidth(audio_mono, sample_rate)
             rolloff = extract_spectral_rolloff(audio_mono, sample_rate)
-            zcr = extract_zero_crossing_rate(audio_mono)
-            cqt = extract_cqt(audio_mono, sample_rate, n_cqt)
+            zcr = extract_zero_crossing_rate(audio_mono)  
 
             # Concatenate the features
             features_tmp = torch.cat(
