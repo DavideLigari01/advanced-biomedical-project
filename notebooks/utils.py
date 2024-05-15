@@ -19,6 +19,7 @@ from imblearn.over_sampling import RandomOverSampler
 from imblearn.under_sampling import RandomUnderSampler
 from imblearn.over_sampling import SMOTEN
 from collections import Counter
+from typing import List, Tuple
 
 # ----------------- Functions ---------------------------
 
@@ -111,7 +112,7 @@ def extract_features(
         n_mfcc (int, optional): The number of Mel-frequency cepstral coefficients (MFCCs) to extract. Defaults to 13.
         melkwargs (dict, optional): Additional arguments for Mel spectrogram computation.
         n_cqt (int, optional): The number of constant-Q transform (CQT) bins to extract. Defaults to 84.
-        
+
     Returns:
         list: A list containing tensors of extracted features for each audio file.
     """
@@ -155,7 +156,16 @@ def extract_features(
 
             # Concatenate the features
             features_tmp = torch.cat(
-                (mfcc_features_tmp, chroma_stft, cqt, rms, spec_cent, spec_bw, rolloff, zcr),
+                (
+                    mfcc_features_tmp,
+                    chroma_stft,
+                    cqt,
+                    rms,
+                    spec_cent,
+                    spec_bw,
+                    rolloff,
+                    zcr,
+                ),
                 dim=0,
             )
             features_local.append(features_tmp)
@@ -272,8 +282,10 @@ def extract_chroma_stft(audio: torch.Tensor, sample_rate: int) -> torch.Tensor:
     Returns:
     - chroma_stft (torch.Tensor): The Chroma STFT features of the audio file.
     """
-    #chroma_stft = np.mean(librosa.feature.chroma_stft(y=audio.numpy(), sr=sample_rate))
-    chroma_stft = np.mean(librosa.feature.chroma_stft(y=audio.numpy(), sr=sample_rate), axis=2)
+    # chroma_stft = np.mean(librosa.feature.chroma_stft(y=audio.numpy(), sr=sample_rate))
+    chroma_stft = np.mean(
+        librosa.feature.chroma_stft(y=audio.numpy(), sr=sample_rate), axis=2
+    )
 
     chroma_stft = torch.tensor(chroma_stft)
     return chroma_stft.reshape(-1)
@@ -613,8 +625,8 @@ def print_correlation(
     """
     # Set up figure and styling
     plt.figure(figsize=figuresize)
+    sns.set_theme(context="paper", font_scale=1.4)
     if pvalue:
-        sns.set_theme(context="paper", font_scale=1.4)
         plt.suptitle(title, fontsize=22, color="black")
 
     # Step 3: Calculate Spearman correlation coefficients and p-values
@@ -691,78 +703,103 @@ def detect_outliers_iqr(
 # --------------------------------------------------------------------
 
 
-def rebalance_data(data_to_balance: np.array, target_size: int, random_seed: int = 42) -> np.array:
+def rebalance_data(
+    data_to_balance: np.array, target_size: int, random_seed: int = 42
+) -> np.array:
     """
     Rebalances the data by oversampling or undersampling the classes based on the target size.
-     
+
     Parameters:
     - data_to_balance: (np.array) representing the data to be rebalanced (X,y,filename).
     - target_size (int): The desired size for each class after rebalancing.
     - random_seed (int): The random seed for reproducibility.
-    
+
     Returns:
     - data_rebalanced: Rebalanced data, where each data element is a numpy array.
     """
-    
+
     random.seed(random_seed)
-    
+
     # Extract the data and the labels
-    X = data_to_balance[:,:-2]
-    y = data_to_balance[:,-2]
-    filenames = data_to_balance[:,-1]
-    
-    X = np.hstack((X, filenames.reshape(-1,1)))
-    
+    X = data_to_balance[:, :-2]
+    y = data_to_balance[:, -2]
+    filenames = data_to_balance[:, -1]
+
+    X = np.hstack((X, filenames.reshape(-1, 1)))
+
     # Get the unique classes and their counts
     unique_classes, class_counts = np.unique(y, return_counts=True)
-    
+
     # check the classes to be undersampled or oversampled
     classes_to_undersample = unique_classes[class_counts > target_size]
     classes_to_oversample = unique_classes[class_counts < target_size]
-    
+
     # Initialize the undersampler and oversampler
-    undersampler = RandomUnderSampler(sampling_strategy={class_: target_size for class_ in classes_to_undersample}, random_state=random_seed)
-    oversampler = SMOTEN(sampling_strategy={class_: target_size for class_ in classes_to_oversample}, random_state=random_seed)
-    
+    undersampler = RandomUnderSampler(
+        sampling_strategy={class_: target_size for class_ in classes_to_undersample},
+        random_state=random_seed,
+    )
+    oversampler = SMOTEN(
+        sampling_strategy={class_: target_size for class_ in classes_to_oversample},
+        random_state=random_seed,
+    )
+
     # get the data to be undersampled
     X_to_undersample = X[np.isin(y, classes_to_undersample)]
     X_to_oversample = X[np.isin(y, classes_to_oversample)]
-    
+
     # get the labels to be undersampled
     y_to_undersample = y[np.isin(y, classes_to_undersample)]
     y_to_oversample = y[np.isin(y, classes_to_oversample)]
-    
+
     # undersample the data
     try:
-        X_undersampled, y_undersampled = undersampler.fit_resample(X_to_undersample, y_to_undersample)
-    except:  #when only one class is undersampled
+        X_undersampled, y_undersampled = undersampler.fit_resample(
+            X_to_undersample, y_to_undersample
+        )
+    except:  # when only one class is undersampled
         X_undersampled = np.array(random.sample(list(X_to_undersample), target_size))
         y_undersampled = np.array(random.sample(list(y_to_undersample), target_size))
-        
-    X_oversampled, y_oversampled = oversampler.fit_resample(X_to_oversample, y_to_oversample)
-    
+
+    X_oversampled, y_oversampled = oversampler.fit_resample(
+        X_to_oversample, y_to_oversample
+    )
+
     # detach the filenames
-    filenames_undersampled = X_undersampled[:,-1]
-    filenames_oversampled = X_oversampled[:,-1]
-    
+    filenames_undersampled = X_undersampled[:, -1]
+    filenames_oversampled = X_oversampled[:, -1]
+
     # remove the filenames from the data
-    X_undersampled = X_undersampled[:,:-1]
-    X_oversampled = X_oversampled[:,:-1]
-    
+    X_undersampled = X_undersampled[:, :-1]
+    X_oversampled = X_oversampled[:, :-1]
+
     # concatenate the data
-    data_oversampled = np.hstack((X_oversampled, y_oversampled.reshape(-1,1), filenames_oversampled.reshape(-1,1)))
-    data_undersampled = np.hstack((X_undersampled, y_undersampled.reshape(-1,1), filenames_undersampled.reshape(-1,1)))
+    data_oversampled = np.hstack(
+        (
+            X_oversampled,
+            y_oversampled.reshape(-1, 1),
+            filenames_oversampled.reshape(-1, 1),
+        )
+    )
+    data_undersampled = np.hstack(
+        (
+            X_undersampled,
+            y_undersampled.reshape(-1, 1),
+            filenames_undersampled.reshape(-1, 1),
+        )
+    )
     full_data = np.vstack((data_oversampled, data_undersampled))
-    
+
     return full_data
-    
-    
-    
+
+
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 
 
-def create_dataset(full_data: list, labels_col: int=-2) -> torch.utils.data.dataset.TensorDataset:
+def create_dataset(
+    full_data: list, labels_col: int = -2
+) -> torch.utils.data.dataset.TensorDataset:
     """
     Create a dataset from the data of the real and fake audio files. Convert tensor to a dataset using the columns (:,:-idx_filenames) as data and the column (;, -idx_filenames) as the label.
 
@@ -773,13 +810,16 @@ def create_dataset(full_data: list, labels_col: int=-2) -> torch.utils.data.data
     Returns:
     - data (torch.utils.data.dataset.TensorDataset): The dataset containing the data of the real and fake audio files.
     """
-    
+
     datasets = []
-    
+
     for data in full_data:
-        data = torch.utils.data.TensorDataset(data[:, :labels_col].type(torch.float), data[:, labels_col].type(torch.LongTensor))
+        data = torch.utils.data.TensorDataset(
+            data[:, :labels_col].type(torch.float),
+            data[:, labels_col].type(torch.LongTensor),
+        )
         datasets.append(data)
-        
+
     return datasets
 
 
@@ -787,50 +827,56 @@ def create_dataset(full_data: list, labels_col: int=-2) -> torch.utils.data.data
 # --------------------------------------------------------------------
 
 
-def get_dataloaders(full_dataset: list, batch_size: int, shuffling: list=[True, False, False]) -> torch.utils.data.DataLoader:
-        """
-        Get the dataloaders for the training, validation, and test sets.
+def get_dataloaders(
+    full_dataset: list, batch_size: int, shuffling: list = [True, False, False]
+) -> torch.utils.data.DataLoader:
+    """
+    Get the dataloaders for the training, validation, and test sets.
 
-        Args:
-        - full_dataset (list): A list containing the datasets for training, validation, and test.
-        - batch_size (int): The batch size for the dataloaders.
-        - shuffling (list, optional): A list of boolean values indicating whether to shuffle the data for each dataset. 
-            The length of the list should be equal to the number of datasets in full_dataset. 
-            Default is [True, False, False].
+    Args:
+    - full_dataset (list): A list containing the datasets for training, validation, and test.
+    - batch_size (int): The batch size for the dataloaders.
+    - shuffling (list, optional): A list of boolean values indicating whether to shuffle the data for each dataset.
+        The length of the list should be equal to the number of datasets in full_dataset.
+        Default is [True, False, False].
 
-        Returns:
-        - dataloaders (list): A list containing the training, validation, and test dataloaders.
-        """
-        
-        shuffling = shuffling
-        dataloaders = []
-        
-        for i, dataset in enumerate(full_dataset):
-                dataloader = torch.utils.data.DataLoader(dataset, batch_size=batch_size, shuffle=shuffling[i])
-                dataloaders.append(dataloader)
-        
-        return dataloaders
-    
+    Returns:
+    - dataloaders (list): A list containing the training, validation, and test dataloaders.
+    """
+
+    shuffling = shuffling
+    dataloaders = []
+
+    for i, dataset in enumerate(full_dataset):
+        dataloader = torch.utils.data.DataLoader(
+            dataset, batch_size=batch_size, shuffle=shuffling[i]
+        )
+        dataloaders.append(dataloader)
+
+    return dataloaders
+
+
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 
 
 def get_device():
-     '''
-     Return the device to be used for training
-     '''
- 
-     dev = (
-     "cuda"
-     if torch.cuda.is_available()
-     #else "mps"
-     #if torch.backends.mps.is_available()
-     else "cpu"
-     )
-     print(f"Using {dev} device")
+    """
+    Return the device to be used for training
+    """
 
-     return torch.device(dev)
- 
+    dev = (
+        "cuda"
+        if torch.cuda.is_available()
+        # else "mps"
+        # if torch.backends.mps.is_available()
+        else "cpu"
+    )
+    print(f"Using {dev} device")
+
+    return torch.device(dev)
+
+
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 
@@ -840,58 +886,58 @@ def get_device():
 
 
 def train_model(dataloader, model, loss_fn, optimizer, device, get_loss_acc=False):
-     ''' Training loop.
-     This function trains the model for one epoch, iterating over the dataloader batches and using the optimizer to update the model's weights.
-     It also computes the loss and accuracy 5 times and appends the values to the lists loss_list and acc_list.
-     ----------
-     dataloader: torch.utils.data.DataLoader, training data
-     model: torch.nn.Module, neural network
-     loss_fn: loss function
-     optimizer: torch.optim, optimizer
-     device: torch.device, device to be used for training
-     ----------
-     Returns if get_loss_acc is True:
-     loss_list: list, loss values
-     acc_list: list, accuracy values
-     
-     The values are appended to the lists 5 times during the epoch
-     ----------
-     '''
- 
-     #model = model.to(device)
-     loss_list = []
-     acc_list = []
- 
-     size = len(dataloader.dataset) # number of samples
-     num_batches = len(dataloader) # number of batches
- 
-     model.train()
-     for batch, (X, y) in enumerate(dataloader):
-          X, y = X.to(device), y.to(device)
+    """Training loop.
+    This function trains the model for one epoch, iterating over the dataloader batches and using the optimizer to update the model's weights.
+    It also computes the loss and accuracy 5 times and appends the values to the lists loss_list and acc_list.
+    ----------
+    dataloader: torch.utils.data.DataLoader, training data
+    model: torch.nn.Module, neural network
+    loss_fn: loss function
+    optimizer: torch.optim, optimizer
+    device: torch.device, device to be used for training
+    ----------
+    Returns if get_loss_acc is True:
+    loss_list: list, loss values
+    acc_list: list, accuracy values
 
-          # Compute prediction error
-          pred = model(X)
-          loss = loss_fn(pred, y)
+    The values are appended to the lists 5 times during the epoch
+    ----------
+    """
 
-          # Backpropagation
-          loss.backward()
-          optimizer.step()
-          optimizer.zero_grad()
+    # model = model.to(device)
+    loss_list = []
+    acc_list = []
 
-          # Print the progress 1 times during the epoch
-          if batch % (num_batches//1) == 0:
-               loss_val, acc = 0, 0
-               loss_val, current = loss.item(), (batch + 1) * len(X)
-               acc = (pred.argmax(1) == y).type(torch.float).sum().item()/len(y)*100
-               
-               if get_loss_acc:
-                    loss_list.append(loss_val)
-                    acc_list.append(acc)
+    size = len(dataloader.dataset)  # number of samples
+    num_batches = len(dataloader)  # number of batches
 
-               print(f"loss: {loss:>7f} - acc: {acc:2.2f}% [{current:>5d}/{size:>5d}]")
-     
-     if get_loss_acc:
-          return loss_list, acc_list
+    model.train()
+    for batch, (X, y) in enumerate(dataloader):
+        X, y = X.to(device), y.to(device)
+
+        # Compute prediction error
+        pred = model(X)
+        loss = loss_fn(pred, y)
+
+        # Backpropagation
+        loss.backward()
+        optimizer.step()
+        optimizer.zero_grad()
+
+        # Print the progress 1 times during the epoch
+        if batch % (num_batches // 1) == 0:
+            loss_val, acc = 0, 0
+            loss_val, current = loss.item(), (batch + 1) * len(X)
+            acc = (pred.argmax(1) == y).type(torch.float).sum().item() / len(y) * 100
+
+            if get_loss_acc:
+                loss_list.append(loss_val)
+                acc_list.append(acc)
+
+            print(f"loss: {loss:>7f} - acc: {acc:2.2f}% [{current:>5d}/{size:>5d}]")
+
+    if get_loss_acc:
+        return loss_list, acc_list
 
 
 # --------------------------------------------------------------------
@@ -899,138 +945,156 @@ def train_model(dataloader, model, loss_fn, optimizer, device, get_loss_acc=Fals
 
 
 def test_model(dataloader, model, loss_fn, device, get_loss_acc=False):
-     ''' Evaluation loop.
-     This function evaluates the model on the evaluation data, iterating over the dataloader batches.
-     It also computes the loss and accuracy 5 times and appends the values to the lists loss_list and acc_list.
-     ----------
-     dataloader: torch.utils.data.DataLoader, evaluation data
-     model: torch.nn.Module, neural network
-     loss_fn: loss function
-     device: torch.device, device to be used for evaluation
-     ----------
-     Returns if get_loss_acc is True:
-     loss_list: list, loss values
-     acc_list: list, accuracy values
- 
-     The values are appended to the lists 5 times during the epoch
-     ----------
-     '''
+    """Evaluation loop.
+    This function evaluates the model on the evaluation data, iterating over the dataloader batches.
+    It also computes the loss and accuracy 5 times and appends the values to the lists loss_list and acc_list.
+    ----------
+    dataloader: torch.utils.data.DataLoader, evaluation data
+    model: torch.nn.Module, neural network
+    loss_fn: loss function
+    device: torch.device, device to be used for evaluation
+    ----------
+    Returns if get_loss_acc is True:
+    loss_list: list, loss values
+    acc_list: list, accuracy values
 
-     #model = model.to(device)
-     
-     size = len(dataloader.dataset) # number of samples
-     num_batches = len(dataloader) # number of batches
-     batch_size = dataloader.batch_size
- 
-     # Set the model in evaluation mode
-     model.eval()
-     test_loss, acc = 0, 0
-     loss_list = []
-     acc_list = []
- 
-     # Disable gradient computation for efficiency
-     with torch.no_grad():
-          for batch, (X, y) in enumerate(dataloader):
-               X, y = X.to(device), y.to(device)
-               pred = model(X)
-               test_loss += loss_fn(pred, y).item()
+    The values are appended to the lists 5 times during the epoch
+    ----------
+    """
 
-               # Compute the accuracy
-               acc += (pred.argmax(1) == y).type(torch.float).sum().item()
+    # model = model.to(device)
 
-               if get_loss_acc and batch % (num_batches//1) == 0:
-                    loss_list.append(test_loss/(batch+1))
-                    acc_list.append(acc*100/((batch+1)*batch_size))
+    size = len(dataloader.dataset)  # number of samples
+    num_batches = len(dataloader)  # number of batches
+    batch_size = dataloader.batch_size
 
-     test_loss /= num_batches
-     acc /= size
-     print(f"Test Error: \n Accuracy: {(100*acc):>0.1f}%, Avg loss: {test_loss:>8f} \n")
- 
-     if get_loss_acc:
-          return loss_list, acc_list
+    # Set the model in evaluation mode
+    model.eval()
+    test_loss, acc = 0, 0
+    loss_list = []
+    acc_list = []
 
+    # Disable gradient computation for efficiency
+    with torch.no_grad():
+        for batch, (X, y) in enumerate(dataloader):
+            X, y = X.to(device), y.to(device)
+            pred = model(X)
+            test_loss += loss_fn(pred, y).item()
 
-# --------------------------------------------------------------------
-# --------------------------------------------------------------------
+            # Compute the accuracy
+            acc += (pred.argmax(1) == y).type(torch.float).sum().item()
 
+            if get_loss_acc and batch % (num_batches // 1) == 0:
+                loss_list.append(test_loss / (batch + 1))
+                acc_list.append(acc * 100 / ((batch + 1) * batch_size))
 
-def fit_model(epochs, train_dl, test_dl, model, loss_func, optimizer, device, model_path_store, path_to_store=None, get_loss_acc=False, evaluation_epochs = 10, checkpoint_epochs=5):
-     ''' Training and evaluation loop.
-     This function trains the model for the specified number of epochs and evaluates it on the test data.
-     It also computes the loss and accuracy 5 times and appends the values to the lists train_loss_list, train_acc_list, test_loss_list, test_acc_list.
-     ----------
-     epochs: int, number of epochs
-     train_dl: torch.utils.data.DataLoader, training data
-     test_dl: torch.utils.data.DataLoader, test data
-     model: torch.nn.Module, neural network
-     loss_fn: loss function
-     optimizer: torch.optim, optimizer
-     device: torch.device, device to be used for training
-     model_path_store: path to store the model with the best loss
-     path_to_store: path to store the model and optimizer parameters. If None, the model is not saved. 
-     get_loss_acc: bool, return loss and accuracy values
-     checkpoint_epochs: int, number of epochs between each checkpoint
-     ----------
-     Returns if get_loss_acc is True:
-     train_loss_list: list, training loss values
-     train_acc_list: list, training accuracy values
-     test_loss_list: list, test loss values
-     test_acc_list: list, test accuracy values
-     ----------
-     '''
-     
-     # timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-     # writer = SummaryWriter('runs/fashion_trainer_{}'.format(timestamp))
- 
-     train_loss_list, train_acc_list = [], []
-     test_loss_list, test_acc_list = [], []
-     best_loss = 10000000
-     model = model.to(device)
-     
-     for epoch in tqdm(range(epochs)):
-          train_loss, train_acc = train_model(train_dl, model, loss_func, optimizer, device, get_loss_acc=True)
-          
-          
-          # Log the running loss averaged per batch
-          # for both training and validation
-          # writer.add_scalars('Training vs. Validation Loss',
-          #           { 'Training' : train_loss, 'Validation' : train_loss },
-          #           epoch + 1)
-          # writer.flush()
-     
+    test_loss /= num_batches
+    acc /= size
+    print(f"Test Error: \n Accuracy: {(100*acc):>0.1f}%, Avg loss: {test_loss:>8f} \n")
 
-          if epoch % evaluation_epochs == 0:
-               print(f"Epoch {epoch+1}\n-------------------------------")
-               # Train
-               train_loss_list.extend(train_loss)
-               train_acc_list.extend(train_acc)
-
-               # Evaluation
-               test_loss, test_acc = test_model(test_dl, model, loss_func, device, get_loss_acc=True)
-               test_loss_list.extend(test_loss)
-               test_acc_list.extend(test_acc)
-               
-               # Save the model with the best loss
-               if test_loss[-1] < best_loss:
-                    best_loss = test_loss[-1]
-                    model_scripted = torch.jit.script(model) # Export to TorchScript
-                    model_scripted.save(model_path_store + '_best_loss.pth')
-                    #torch.save(model.state_dict(), model_path_store + '_best_loss.pth')
-   
-          # Save parameters in case of interruption prior to completion
-          if epoch % checkpoint_epochs == 0 and path_to_store:
-               checkpoint_info = {'epoch': epoch, 'model_state_dict': model.state_dict(), 'optimizer_state_dict': optimizer.state_dict(), 'loss': train_loss}
-               torch.save(checkpoint_info, path_to_store)
-     
-     print("Done!")
-
-     return train_loss_list, train_acc_list, test_loss_list, test_acc_list
+    if get_loss_acc:
+        return loss_list, acc_list
 
 
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 
 
+def fit_model(
+    epochs,
+    train_dl,
+    test_dl,
+    model,
+    loss_func,
+    optimizer,
+    device,
+    model_path_store,
+    path_to_store=None,
+    get_loss_acc=False,
+    evaluation_epochs=10,
+    checkpoint_epochs=5,
+):
+    """Training and evaluation loop.
+    This function trains the model for the specified number of epochs and evaluates it on the test data.
+    It also computes the loss and accuracy 5 times and appends the values to the lists train_loss_list, train_acc_list, test_loss_list, test_acc_list.
+    ----------
+    epochs: int, number of epochs
+    train_dl: torch.utils.data.DataLoader, training data
+    test_dl: torch.utils.data.DataLoader, test data
+    model: torch.nn.Module, neural network
+    loss_fn: loss function
+    optimizer: torch.optim, optimizer
+    device: torch.device, device to be used for training
+    model_path_store: path to store the model with the best loss
+    path_to_store: path to store the model and optimizer parameters. If None, the model is not saved.
+    get_loss_acc: bool, return loss and accuracy values
+    checkpoint_epochs: int, number of epochs between each checkpoint
+    ----------
+    Returns if get_loss_acc is True:
+    train_loss_list: list, training loss values
+    train_acc_list: list, training accuracy values
+    test_loss_list: list, test loss values
+    test_acc_list: list, test accuracy values
+    ----------
+    """
+
+    # timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    # writer = SummaryWriter('runs/fashion_trainer_{}'.format(timestamp))
+
+    train_loss_list, train_acc_list = [], []
+    test_loss_list, test_acc_list = [], []
+    best_loss = 10000000
+    model = model.to(device)
+
+    for epoch in tqdm(range(epochs)):
+        train_loss, train_acc = train_model(
+            train_dl, model, loss_func, optimizer, device, get_loss_acc=True
+        )
+
+        # Log the running loss averaged per batch
+        # for both training and validation
+        # writer.add_scalars('Training vs. Validation Loss',
+        #           { 'Training' : train_loss, 'Validation' : train_loss },
+        #           epoch + 1)
+        # writer.flush()
+
+        if epoch % evaluation_epochs == 0:
+            print(f"Epoch {epoch+1}\n-------------------------------")
+            # Train
+            train_loss_list.extend(train_loss)
+            train_acc_list.extend(train_acc)
+
+            # Evaluation
+            test_loss, test_acc = test_model(
+                test_dl, model, loss_func, device, get_loss_acc=True
+            )
+            test_loss_list.extend(test_loss)
+            test_acc_list.extend(test_acc)
+
+            # Save the model with the best loss
+            if test_loss[-1] < best_loss:
+                best_loss = test_loss[-1]
+                model_scripted = torch.jit.script(model)  # Export to TorchScript
+                model_scripted.save(model_path_store + "_best_loss.pth")
+                # torch.save(model.state_dict(), model_path_store + '_best_loss.pth')
+
+        # Save parameters in case of interruption prior to completion
+        if epoch % checkpoint_epochs == 0 and path_to_store:
+            checkpoint_info = {
+                "epoch": epoch,
+                "model_state_dict": model.state_dict(),
+                "optimizer_state_dict": optimizer.state_dict(),
+                "loss": train_loss,
+            }
+            torch.save(checkpoint_info, path_to_store)
+
+    print("Done!")
+
+    return train_loss_list, train_acc_list, test_loss_list, test_acc_list
+
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
 def resample_audio(sample: np.array, orig_freq: int, new_freq: int) -> np.array:
     """
     Resamples an audio sample from the original frequency to a new frequency.
@@ -1053,8 +1117,9 @@ def resample_audio(sample: np.array, orig_freq: int, new_freq: int) -> np.array:
 # --------------------------------------------------------------------
 
 
-
-def check_resample_sample_rate(target_freq: int, src_dir: str, dest_dir: str = None, overwrite: bool=False) -> None:
+def check_resample_sample_rate(
+    target_freq: int, src_dir: str, dest_dir: str = None, overwrite: bool = False
+) -> None:
     """
     Check if all files in the source directory have the same sample rate.
     If not resample the audio to the target sample rate and save it in the destination directory if overwrite is set to False.
@@ -1064,37 +1129,132 @@ def check_resample_sample_rate(target_freq: int, src_dir: str, dest_dir: str = N
     - target_freq (int): The target sample rate to check against.
     - src_dir (str): The directory path where the audio files are located.
     - dest_dir (str): The directory path where the resampled audio files will be saved.
-    - overwrite (bool, optional): Whether to overwrite the original file with the resampled audio. 
+    - overwrite (bool, optional): Whether to overwrite the original file with the resampled audio.
       If set to False, the resampled audio will be saved with a new filename.
 
     Returns:
     None
     """
-    
+
     # get filenames
     filenames = os.listdir(src_dir)
     # remove hidden files
-    filenames = [file for file in filenames if not file.startswith('.')]
-    
+    filenames = [file for file in filenames if not file.startswith(".")]
+
     for filename in tqdm(filenames):
-        sample, orig_freq = torchaudio.load(src_dir+filename)
+        sample, orig_freq = torchaudio.load(src_dir + filename)
         if orig_freq != target_freq:
             print(f"Resampling {filename} from {orig_freq} Hz to {target_freq} Hz...")
             resampled = resample_audio(sample, orig_freq, target_freq)
 
             if overwrite:
                 # Save the resampled audio
-                torchaudio.save(src_dir+filename, resampled, target_freq)
+                torchaudio.save(src_dir + filename, resampled, target_freq)
                 print(f"Completed.")
-                
+
             else:
                 if dest_dir is None:
                     raise ValueError("Destination directory must be specified.")
                 if not os.path.exists(dest_dir):
                     os.makedirs(dest_dir)
-                torchaudio.save(dest_dir+filename, resampled, target_freq)
+                torchaudio.save(dest_dir + filename, resampled, target_freq)
                 print(f"Completed.")
-                
+
 
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
+
+
+def remove_highly_correlated_features(
+    correlation_matrix_comp: pd.DataFrame,
+    correlation_matrix_no_target: pd.DataFrame,
+    target_variable: str = "label",
+    threshold: float = 0.7,
+    max_corr_count: int = 4,
+) -> List[str]:
+    """
+    Remove highly correlated features based on correlation matrix.
+
+    Parameters:
+        correlation_matrix_comp (pd.DataFrame): Complete correlation matrix including the target variable.
+        correlation_matrix_no_target (pd.DataFrame): Correlation matrix without the target variable.
+        target_variable (str): The name of the target variable.
+        threshold (float): Threshold above which features are considered highly correlated.
+        max_corr_count (int): Maximum number of highly correlated features to keep.
+
+    Returns:
+        List[str]: List of filtered features.
+    """
+    features_to_remove = set()
+
+    # Iterate through each feature
+    for feature in correlation_matrix_no_target.columns:
+        # Count the number of features with correlation higher than threshold
+        correlated_count = (correlation_matrix_no_target[feature] > threshold).sum()
+        # If the count is greater than the maximum allowed count
+        if correlated_count > max_corr_count:
+            # Get the correlations of the highly correlated features with the target variable
+            target_correlations = correlation_matrix_no_target.loc[feature]
+            candidates = target_correlations[target_correlations > threshold].index
+            best = (
+                correlation_matrix_comp.loc[candidates, target_variable].abs().idxmax()
+            )
+            features_to_remove.update(candidates.difference([best]))
+            print(
+                f"Feature {feature} has {correlated_count} highly correlated features"
+            )
+            print(f"Best feature: {best}")
+            print(f"Removing {candidates.difference([best])} from {feature}\n")
+
+    # Remove the highly correlated features
+    print(f"Removing {len(features_to_remove)} features")
+    filtered_features = [
+        feat
+        for feat in correlation_matrix_comp.columns
+        if feat not in features_to_remove
+    ]
+    return filtered_features
+
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+def split_col_groups(
+    columns: List[str],
+) -> Tuple[List[str], List[str], List[str], List[str]]:
+    """
+    Split a list of column names into groups based on the number of columns.
+
+    Args:
+        columns (List[str]): List of column names.
+
+    Returns:
+        Tuple[List[str], List[str], List[str], List[str]]: A tuple containing lists of column names
+            divided into groups.
+    """
+    ncol = len(columns)
+    column1: List[str] = []
+    column2: List[str] = []
+    column3: List[str] = []
+    column4: List[str] = []
+
+    if int(ncol // 3) <= 15:
+        column1 = columns[: int(ncol // 3)]
+        column2 = columns[int(ncol // 3) : int(2 * ncol // 3)]
+        column3 = columns[int(2 * ncol // 3) : -1]
+        column4 = None
+        column1.extend([columns[-1]])
+        column2.extend([columns[-1]])
+        column3.extend([columns[-1]])
+    else:
+        column1 = columns[: int(ncol // 4)]
+        column2 = columns[int(ncol // 4) : int(2 * ncol // 4)]
+        column3 = columns[int(2 * ncol // 4) : int(3 * ncol // 4)]
+        column4 = columns[int(3 * ncol // 4) : -1]
+        column1.extend([columns[-1]])
+        column2.extend([columns[-1]])
+        column3.extend([columns[-1]])
+        column4.extend([columns[-1]])
+
+    return column1, column2, column3, column4
