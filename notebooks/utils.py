@@ -753,42 +753,47 @@ def rebalance_data(
     y_to_oversample = y[np.isin(y, classes_to_oversample)]
 
     # undersample the data
-    try:
-        X_undersampled, y_undersampled = undersampler.fit_resample(
-            X_to_undersample, y_to_undersample
-        )
-    except:  # when only one class is undersampled
-        X_undersampled = np.array(random.sample(list(X_to_undersample), target_size))
-        y_undersampled = np.array(random.sample(list(y_to_undersample), target_size))
-
-    X_oversampled, y_oversampled = oversampler.fit_resample(
-        X_to_oversample, y_to_oversample
-    )
-
-    # detach the filenames
-    filenames_undersampled = X_undersampled[:, -1]
-    filenames_oversampled = X_oversampled[:, -1]
-
-    # remove the filenames from the data
-    X_undersampled = X_undersampled[:, :-1]
-    X_oversampled = X_oversampled[:, :-1]
-
-    # concatenate the data
-    data_oversampled = np.hstack(
-        (
-            X_oversampled,
-            y_oversampled.reshape(-1, 1),
-            filenames_oversampled.reshape(-1, 1),
-        )
-    )
-    data_undersampled = np.hstack(
+    if len(classes_to_undersample) > 1:
+        try:
+            X_undersampled, y_undersampled = undersampler.fit_resample(
+                X_to_undersample, y_to_undersample
+            )
+        except:  # when only one class is undersampled
+            X_undersampled = np.array(random.sample(list(X_to_undersample), target_size))
+            y_undersampled = np.array(random.sample(list(y_to_undersample), target_size))
+        
+        # detach the filenames
+        filenames_undersampled = X_undersampled[:, -1]
+        X_undersampled = X_undersampled[:, :-1]
+        data_undersampled = np.hstack(
         (
             X_undersampled,
             y_undersampled.reshape(-1, 1),
             filenames_undersampled.reshape(-1, 1),
         )
     )
-    full_data = np.vstack((data_oversampled, data_undersampled))
+
+    else:
+        X_oversampled, y_oversampled = oversampler.fit_resample(
+            X_to_oversample, y_to_oversample
+        )
+        filenames_oversampled = X_oversampled[:, -1]
+        X_oversampled = X_oversampled[:, :-1]
+        data_oversampled = np.hstack(
+        (
+            X_oversampled,
+            y_oversampled.reshape(-1, 1),
+            filenames_oversampled.reshape(-1, 1),
+        )
+    )
+
+    # concatenate the data if they are both available
+    if len(classes_to_undersample) > 1 and len(classes_to_oversample) > 1:
+        full_data = np.vstack((data_oversampled, data_undersampled))
+    elif len(classes_to_undersample) > 1:
+        full_data = data_undersampled
+    else:
+        full_data = data_oversampled
 
     return full_data
 
