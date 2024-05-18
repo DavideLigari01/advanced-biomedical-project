@@ -1188,7 +1188,7 @@ def remove_highly_correlated_features(
         max_corr_count (int): Maximum number of highly correlated features to keep.
 
     Returns:
-        List[str]: List of filtered features.
+        List[str]: List of features to remove.
     """
     features_to_remove = set()
 
@@ -1208,13 +1208,7 @@ def remove_highly_correlated_features(
 
     # Remove the highly correlated features
     print(f"Removing {len(features_to_remove)} features")
-    print(features_to_remove)
-    filtered_features = [
-        feat
-        for feat in correlation_matrix_comp.columns
-        if feat not in features_to_remove
-    ]
-    return filtered_features
+    return features_to_remove
 
 
 # --------------------------------------------------------------------
