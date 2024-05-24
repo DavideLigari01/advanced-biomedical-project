@@ -1208,7 +1208,7 @@ def remove_highly_correlated_features(
 
     # Remove the highly correlated features
     print(f"Removing {len(features_to_remove)} features")
-    return features_to_remove
+    return list(features_to_remove)
 
 
 # --------------------------------------------------------------------
