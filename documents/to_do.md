@@ -18,6 +18,8 @@ Flusso:
    1. One model per feature, scelgo diversi modelli e senza bilanciamento, e li alleno per ogni feature per vedere quale feature è più discriminante
    2. Feature correlation: già fatto
 
+
+
 2. Tipo di bilanciamento, scelgo un modello a caso ed lo alleno nelle seguenti condizioni
    1. No balancing
    2. Prior balancing
