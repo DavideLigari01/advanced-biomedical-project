@@ -1207,7 +1207,7 @@ def remove_highly_correlated_features(
             features_to_remove.update(candidates.difference([best]))
 
     # Remove the highly correlated features
-    print(f"Removing {len(features_to_remove)} features")
+    print(f" {len(features_to_remove)} features should be removed")
     return list(features_to_remove)
 
 
