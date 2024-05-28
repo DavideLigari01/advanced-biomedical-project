@@ -1,0 +1,94 @@
+\documentclass[twocolumn]{class}
+
+
+\addbibresource{References.bib}
+
+% add path to images
+\graphicspath{ {./images/} }
+
+\title{Heart Disease Prediction from heart beat audio signals using Machine Learning and Network Analysis}
+\shorttitle{Heart Disease Prediction}
+
+\github{https://github.com/DavideLigari01/advanced-biomedical-project}
+
+\author{Ligari D. • Alberti A.  }
+
+\affil[1]{Department of Computer Engineering, Data Science, University of Pavia, Italy \newline\centering Course of Advanced Biomedical Machine Learning}
+
+\keywords{---TO BE DEFINED---}
+\abstract{  
+   ---TO BE DEFINED---
+}
+\firstauthor{Alberti Ligari}
+\publicationdate{\today}
+
+
+\begin{document}
+
+\maketitle
+\pagestyle{FirstPage}
+
+\tableofcontents
+% \nocite{dizdar_dns_2021}
+
+% ------------------- START OF SECTIONS -------------------
+
+
+% ------------------- Introduction -------------------
+
+% Introduction to the medical problem and how it is currently addressed (some bibliography)
+\input{./sections/introduction.tex}
+\pagestyle{OtherPage}
+
+% ------------------- Diseases -------------------
+
+
+\input{./sections/dataset.tex}
+
+% ------------------- Dataset -------------------
+
+% Description of the dataset and its features (some plots and one hot encoding)
+\input{./sections/dataset.tex}
+
+
+% ------------------- Goals -------------------
+
+% Description of the goals of the project:
+\input{./sections/goals.tex}
+% - ML model to predict the disease
+% - Network analysis to find the most important symptoms to reduce complexity, and enhance the available features
+
+
+% -------------------Feature extraction -------------------
+
+\input{./sections/feature_extraction.tex}
+
+
+
+% ------------------- Feature Selection -------------------
+\input{./sections/feature_selection.tex}
+
+% ------------------- Feature Reduction -------------------
+\input{./sections/feature_reduction.tex}
+
+% ------------------- Model Selection -------------------
+\input{./sections/model_selection.tex}
+
+% ------------------- Best Model Analysis -------------------
+\input{./sections/best_model_analysis.tex}
+
+% ---------------------- Conclusion -----------------------------
+
+\input{./sections/conclusion.tex}
+\input{./sections/future_works.tex}
+% - our approach in feature selection and parameters search is not optimal 
+% - list the possible issues (e.g. we are training model on diverse features with the optimal parameters for other features)
+% - exploit the knowledge of symptoms communities and their most pointed diseases, using it at prior probability for the model classification
+
+\clearpage
+\input{./sections/appendix.tex}
+
+\clearpage
+\printbibliography
+
+\end{document}
