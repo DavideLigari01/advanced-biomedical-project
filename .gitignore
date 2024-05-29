@@ -17,3 +17,4 @@ __pycache__
 *.synctex.gz
 *.blg
 *.bbl
+features/raw/features_images_1_(80, 80)_mfcc_spectrogram_mel_spectrogram.pt
