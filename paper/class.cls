@@ -228,12 +228,12 @@
   {-12pt}%
   {6pt}%
   {\setlength\parindent{0em} \fontsize{12}{14} \selectfont \bfseries\textsc}}%
-\renewcommand \thesubsection{\alph{subsection}}
+\renewcommand \thesubsection{\arabic{section}.\arabic{subsection}}
 \renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
   {-12pt}%
   {6pt}%
   {\setlength\parindent{0em} \fontsize{11}{13} \selectfont \bfseries}}%
-\renewcommand \thesubsubsection{\arabic{subsubsection}}
+\renewcommand \thesubsubsection{\arabic{section}.\arabic{subsection}.\arabic{subsubsection}}
 \renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
   {-12pt}%
   {6pt}%
