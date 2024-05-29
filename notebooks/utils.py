@@ -152,7 +152,7 @@ def extract_features(
             spec_cent = extract_spectral_centroid(audio_mono, sample_rate)
             spec_bw = extract_spectral_bandwidth(audio_mono, sample_rate)
             rolloff = extract_spectral_rolloff(audio_mono, sample_rate)
-            zcr = extract_zero_crossing_rate(audio_mono)  
+            zcr = extract_zero_crossing_rate(audio_mono)
 
             # Concatenate the features
             features_tmp = torch.cat(
@@ -409,7 +409,9 @@ def extract_cqt(audio: torch.Tensor, sample_rate: int, n_cqt: int = 84) -> torch
     Returns:
     - cqt (torch.Tensor): The CQT features of the audio file.
     """
-    cqt = np.abs(np.mean(librosa.cqt(y=audio.numpy(), sr=sample_rate, n_bins=n_cqt), axis=2)) # abs to deal with complex numbers
+    cqt = np.abs(
+        np.mean(librosa.cqt(y=audio.numpy(), sr=sample_rate, n_bins=n_cqt), axis=2)
+    )  # abs to deal with complex numbers
     cqt = torch.tensor(cqt)
     return cqt.reshape(-1)
 
@@ -759,33 +761,37 @@ def rebalance_data(
                 X_to_undersample, y_to_undersample
             )
         except:  # when only one class is undersampled
-            X_undersampled = np.array(random.sample(list(X_to_undersample), target_size))
-            y_undersampled = np.array(random.sample(list(y_to_undersample), target_size))
-        
+            X_undersampled = np.array(
+                random.sample(list(X_to_undersample), target_size)
+            )
+            y_undersampled = np.array(
+                random.sample(list(y_to_undersample), target_size)
+            )
+
         # detach the filenames
         filenames_undersampled = X_undersampled[:, -1]
         X_undersampled = X_undersampled[:, :-1]
         data_undersampled = np.hstack(
-        (
-            X_undersampled,
-            y_undersampled.reshape(-1, 1),
-            filenames_undersampled.reshape(-1, 1),
+            (
+                X_undersampled,
+                y_undersampled.reshape(-1, 1),
+                filenames_undersampled.reshape(-1, 1),
+            )
         )
-    )
 
-    else:
+    if len(classes_to_oversample) > 1:
         X_oversampled, y_oversampled = oversampler.fit_resample(
             X_to_oversample, y_to_oversample
         )
         filenames_oversampled = X_oversampled[:, -1]
         X_oversampled = X_oversampled[:, :-1]
         data_oversampled = np.hstack(
-        (
-            X_oversampled,
-            y_oversampled.reshape(-1, 1),
-            filenames_oversampled.reshape(-1, 1),
+            (
+                X_oversampled,
+                y_oversampled.reshape(-1, 1),
+                filenames_oversampled.reshape(-1, 1),
+            )
         )
-    )
 
     # concatenate the data if they are both available
     if len(classes_to_undersample) > 1 and len(classes_to_oversample) > 1:
