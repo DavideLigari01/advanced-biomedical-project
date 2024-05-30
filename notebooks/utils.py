@@ -17,7 +17,7 @@ import pandas as pd
 from scipy.stats import spearmanr
 from imblearn.over_sampling import RandomOverSampler
 from imblearn.under_sampling import RandomUnderSampler
-from imblearn.over_sampling import SMOTEN
+from imblearn.over_sampling import SMOTEN, SMOTE, ADASYN, RandomOverSampler
 from collections import Counter
 from typing import List, Tuple
 
@@ -741,7 +741,7 @@ def rebalance_data(
         sampling_strategy={class_: target_size for class_ in classes_to_undersample},
         random_state=random_seed,
     )
-    oversampler = SMOTEN(
+    oversampler = RandomOverSampler(
         sampling_strategy={class_: target_size for class_ in classes_to_oversample},
         random_state=random_seed,
     )
@@ -755,7 +755,7 @@ def rebalance_data(
     y_to_oversample = y[np.isin(y, classes_to_oversample)]
 
     # undersample the data
-    if len(classes_to_undersample) > 1:
+    if len(classes_to_undersample) >= 1:
         try:
             X_undersampled, y_undersampled = undersampler.fit_resample(
                 X_to_undersample, y_to_undersample
@@ -769,6 +769,9 @@ def rebalance_data(
             )
 
         # detach the filenames
+        X_to_oversample = np.concatenate((X_to_oversample, X_undersampled), axis=0)
+        y_to_oversample = np.concatenate((y_to_oversample, y_undersampled), axis=0)
+
         filenames_undersampled = X_undersampled[:, -1]
         X_undersampled = X_undersampled[:, :-1]
         data_undersampled = np.hstack(
@@ -779,10 +782,25 @@ def rebalance_data(
             )
         )
 
-    if len(classes_to_oversample) > 1:
-        X_oversampled, y_oversampled = oversampler.fit_resample(
-            X_to_oversample, y_to_oversample
-        )
+    if len(classes_to_oversample) >= 1:
+        if len(classes_to_undersample) > 1:
+            X_oversampled, y_oversampled = oversampler.fit_resample(
+                X_to_oversample, y_to_oversample
+            )
+        else:
+            oversampler = RandomOverSampler(
+                sampling_strategy={
+                    class_: target_size for class_ in classes_to_oversample
+                },
+                random_state=random_seed,
+            )
+            X_oversampled, y_oversampled = oversampler.fit_resample(
+                X_to_oversample, y_to_oversample
+            )
+
+        X_oversampled = X_oversampled[np.isin(y_oversampled, classes_to_oversample)]
+        y_oversampled = y_oversampled[np.isin(y_oversampled, classes_to_oversample)]
+
         filenames_oversampled = X_oversampled[:, -1]
         X_oversampled = X_oversampled[:, :-1]
         data_oversampled = np.hstack(
@@ -794,7 +812,7 @@ def rebalance_data(
         )
 
     # concatenate the data if they are both available
-    if len(classes_to_undersample) > 1 and len(classes_to_oversample) > 1:
+    if len(classes_to_undersample) >= 1 and len(classes_to_oversample) >= 1:
         full_data = np.vstack((data_oversampled, data_undersampled))
     elif len(classes_to_undersample) > 1:
         full_data = data_undersampled
