@@ -1,38 +1,79 @@
 \section{Feature Extraction}
+As demonstrated by \cite{Raza_Mehmood_Ullah_Ahmad_Choi_On_2019} and \cite{Chen_Sun_Chen_Xie_Wu_Xu_2021}, MFCCs 
+are highly effective features for heartbeat classification. In addition to MFCCs, 
+we incorporated other features to capture various characteristics of heart sounds, enhancing the classification accuracy.
+The features used are explained in the following section.
 
-\subsection{Methodology}
 \subsection{Features Type}
 
 \textbf{MFCC}\newline
-Mel-Frequency Cepstral Coefficients (MFCCs) are representations of the short-term power spectrum of sound. They are derived by taking the Fourier transform of a signal, mapping the powers of the spectrum onto the mel scale, taking the logarithm, and then performing a discrete cosine transform. MFCCs are effective in capturing the timbral texture of audio and are widely used in speech and audio processing due to their ability to represent the envelope of the time power spectrum.
+Mel-Frequency Cepstral Coefficients (MFCCs) are representations of the short-term power spectrum of sound. 
+They are derived by taking the Fourier transform of a signal, mapping the powers of the spectrum onto the mel 
+scale, taking the logarithm, and then performing a discrete cosine transform. MFCCs are effective in capturing 
+the timbral texture of audio and are widely used in speech and audio processing due to 
+their ability to represent the envelope of the time power spectrum.
+In heartbeat classification, MFFCs can reflect the different perceived quality of heart sounds,
+such as the presence of murmurs or other anomalies.
 
 \vspace{0.5cm}\noindent
 \textbf{Chroma STFT}\newline
-Chroma features represent the 12 different pitch classes of music (e.g., C, C\#, D, etc.). They are particularly useful for capturing harmonic and melodic characteristics in music. By mapping audio signals onto the chroma scale, these features can identify pitches regardless of the octave, making them useful for analyzing harmonic content in heart sounds.
+Chroma features represent the 12 different pitch classes of music (e.g., C, C\#, D, etc.). 
+They are particularly useful for capturing harmonic and melodic characteristics in music. 
+By mapping audio signals onto the chroma scale, these features can identify pitches regardless 
+of the octave, making them useful for analyzing harmonic content in heart sounds.
 
 \vspace{0.5cm}\noindent
 \textbf{RMS}\newline
-Root Mean Square (RMS) measures the magnitude of varying quantities, in this case, the amplitude of an audio signal. It is a straightforward way to compute the energy of the signal over a given time frame. RMS is useful in audio analysis for detecting volume changes and can help identify different types of heartbeats based on their energy levels.
+Root Mean Square (RMS) measures the magnitude of varying quantities, in this case, 
+the amplitude of an audio signal. It is a straightforward way to compute the energy of 
+the signal over a given time frame. RMS is useful in audio analysis for detecting volume 
+changes and can help identify different types of heartbeats based on their energy levels.
+For example, in a given timeframe the RMS may be altered by the presence of a murmur
+with respect to a normal heart sound.
 
 \vspace{0.5cm}\noindent
 \textbf{ZCR}\newline
-Zero-Crossing Rate (ZCR) is the rate at which a signal changes sign, indicating how often the signal crosses the zero amplitude line. It is particularly useful for detecting the noisiness and the temporal structure of the signal. In heartbeat classification, ZCR can help differentiate between normal and abnormal sounds by highlighting changes in signal periodicity.
+Zero-Crossing Rate (ZCR) is the rate at which a signal changes sign, indicating how often the signal 
+crosses the zero amplitude line. It is particularly useful for detecting the noisiness and the temporal 
+structure of the signal. In heartbeat classification, ZCR can help differentiate between normal and abnormal 
+sounds by highlighting changes in signal periodicity.
 
 \vspace{0.5cm}\noindent
 \textbf{CQT}\newline
-Constant-Q Transform (CQT) is a time-frequency representation with a logarithmic frequency scale, making it suitable for musical applications. It captures more detail at lower frequencies, which is essential for analyzing the low-frequency components of heart sounds. CQT can help identify rhythmic and harmonic patterns in the audio.
+Constant-Q Transform (CQT) is a time-frequency representation with a logarithmic frequency scale, making it 
+suitable for musical applications. Since it captures more detail at lower frequencies, it may be useful for analyzing 
+the low-frequency components of heart sounds.
 
 \vspace{0.5cm}\noindent
 \textbf{Spectral Centroid}\newline
-The spectral centroid indicates the center of mass of the spectrum and is often perceived as the brightness of a sound. It is calculated as the weighted mean of the frequencies present in the signal, with their magnitudes as weights. In heart sound analysis, a higher spectral centroid can indicate sharper, more pronounced sounds, while a lower centroid suggests smoother sounds.
+The spectral centroid indicates the center of mass of the spectrum and is often perceived as the brightness of a 
+sound. It is calculated as the weighted mean of the frequencies present in the signal, with their magnitudes as 
+weights. In heart sound analysis, a higher spectral centroid can indicate sharper, more pronounced sounds, 
+while a lower centroid suggests smoother sounds. 
 
 \vspace{0.5cm}\noindent
 \textbf{Spectral Bandwidth}\newline
-Spectral bandwidth measures the width of the spectrum around the centroid, providing an indication of the range of frequencies present. It is calculated as the square root of the variance of the spectrum. This feature helps in understanding the spread of the frequency components in the heart sounds, which can be indicative of different heart conditions.
+Spectral bandwidth measures the width of the spectrum around the centroid, providing an indication of the range 
+of frequencies present. It is calculated as the square root of the variance of the spectrum. This feature helps 
+in understanding the spread of the frequency components in the heart sounds, which can be indicative of different 
+heart conditions.
 
 \vspace{0.5cm}\noindent
 \textbf{Spectral Roll-off}
-Spectral roll-off is the frequency below which a certain percentage of the total spectral energy lies. It is typically set at 85\% and helps distinguish between harmonic and non-harmonic content. In heartbeat classification, spectral roll-off can be used to differentiate between sounds with a concentrated energy distribution and those with more dispersed energy.
+Spectral roll-off is the frequency below which a certain percentage of the total spectral energy lies. It is 
+typically set at 85\% and helps distinguish between harmonic and non-harmonic content. In heartbeat classification, 
+spectral roll-off can be used to differentiate between sounds with a concentrated energy distribution and those with more dispersed energy.
+
+\subsection{Methodology}
+We extracted the features from the audio signals using the \textit{Librosa} library in Python. It is worth to underline three main choice in the extraction
+methodology that have a direct impact on the results:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Normalization}: the audio are loaded using the \textit{torchaudio.load()} function, which normalized the audio signals in the range [-1, 1]. This is important to ensure that the features are on the same scale and to prevent the model from being biased towards features with larger values.
+    \item \textbf{Audio Segmentation}: to extract features, we divided the audio recordings into chunks of a given length (in seconds). This segmentation allowed us to analyze the impact of different extraction intervals on model performance, additionally it allow for augmenting the data available. 
+    \item \textbf{Sampling Rate}: while literature on spoken language often suggests that 16000 Hz is sufficient, it was necessary to assess the best sampling rate for heartbeat sounds specifically. We evaluated two sampling rates to determine the optimal rate for heartbeat sounds. 
+    \item \textbf{Hop and Window Size}: the hop size determines the number of samples between successive windows, while the window size determines the number of samples considered. Each feature was extracted using the same window length and hop length facilitating a fair assessment of each feature's contribution to the classification task. 
+\end{itemize}
+The libray used for the extraction is \textit{Librosa}, which is a Python package for music and audio analysis. 
 
 \subsection{Sample Rate and Interval Selection}
 
