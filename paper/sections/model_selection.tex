@@ -1,5 +1,48 @@
 \section{Model Selection}
+\begin{table}[h!]
+    \centering
+    \begin{tabular}{|l|l|}
+        \hline
+        \textbf{Nome}           & \textbf{Architettura}                                 \\ \hline
+        XGBoost                 & -                                                     \\ \hline
+        CatBoost                & -                                                     \\ \hline
+        LightGBM                & -                                                     \\ \hline
+        MLP\_Basic              & (128, 64, 32)                                         \\ \hline
+        MLP\_Ultra              & (512, 256, 128, 64, 32)                               \\ \hline
+        MLP\_Large              & (256, 128, 64, 32)                                    \\ \hline
+        MLP\_Small              & (64, 32)                                              \\ \hline
+        MLP\_Tiny               & (32, 16)                                              \\ \hline
+        MLP\_Reverse            & (32, 64, 128, 256, 512, 256, 128, 64, 32)             \\ \hline
+        MLP\_Bottleneck         & (512, 64, 32)                                         \\ \hline
+        MLP\_Rollercoaster      & (512, 128, 256, 128, 256, 64, 32)                     \\ \hline
+        MLP\_Hourglass          & (512, 256, 128, 64, 32, 64, 128, 256, 512)            \\ \hline
+        MLP\_Pyramid            & (1024, 512, 256, 128, 128, 128, 64, 32)               \\ \hline
+        MLP\_Wide               & (1024, 1024)                                          \\ \hline
+        MLP\_WideUltra          & (1024, 1024, 128, 32)                                 \\ \hline
+        MLP\_Sparse             & (32, 16, 8)                                           \\ \hline
+        MLP\_Dropout            & (128, 64, 32)                                         \\ \hline
+        MLP\_Ensemble1          & \footnotesize{ MLP\_Basic, MLP\_Large, MLP\_Ultra     \\ }\hline
+        MLP\_Ensemble2          & RandomForest, MLP\_Ultra                              \\ \hline
+        MLP\_Ensemble3          & MLP\_Rollercoaster, MLP\_Large                        \\ \hline
+        MLP\_Ensemble4          & MLP\_Rollercoaster, MLP\_Large, MLP\_Ultra            \\ \hline
+        MLP\_Ensemble5          & RandomForest, MLP\_Ultra, MLP\_Rollercoaster          \\ \hline
+        MLP\_Ensemble6          & MLP\_Rollercoaster, MLP\_Large, MLP\_Ultra, MLP\_Wide \\ \hline
+        ALL\_Ensemble           & All models majority vote                              \\ \hline
+        CatBoost\_ALL\_Ensemble & All models CatBoost                                   \\ \hline
+    \end{tabular}
+    \caption{Nomi dei modelli e relative architetture}
+    \label{tab:models}
+\end{table}
 
-\subsection{Explanation of the models}
-\subsection{Methodology}
-\subsection{Results}
+\subsection{Model on specific classes}
+
+\subsubsection{Explanation of the models}
+\subsubsection{Methodology}
+\subsubsection{Results}
+
+\subsection{Models on all classes}
+\subsubsection{Explanation of the models}
+\subsubsection{Methodology}
+\subsubsection{Results}
+
+\subsection{Best model analysis}
