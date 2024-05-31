@@ -1,16 +1,40 @@
 \section{Feature Extraction}
 
+\subsection{Methodology}
+\subsection{Features Type}
 
-\subsection{MFCC}
-\subsection{Chroma}
-\subsection{RMS}
-\subsection{ZCR}
-\subsection{CQT}
-\subsection{Spectral Centroid}
-\subsection{Spectral Bandwidth}
-\subsection{Spectral Roll-off}
+\textbf{MFCC}\newline
+Mel-Frequency Cepstral Coefficients (MFCCs) are representations of the short-term power spectrum of sound. They are derived by taking the Fourier transform of a signal, mapping the powers of the spectrum onto the mel scale, taking the logarithm, and then performing a discrete cosine transform. MFCCs are effective in capturing the timbral texture of audio and are widely used in speech and audio processing due to their ability to represent the envelope of the time power spectrum.
 
-\subsection{Sample rate and interval selection}
+\vspace{0.5cm}\noindent
+\textbf{Chroma STFT}\newline
+Chroma features represent the 12 different pitch classes of music (e.g., C, C\#, D, etc.). They are particularly useful for capturing harmonic and melodic characteristics in music. By mapping audio signals onto the chroma scale, these features can identify pitches regardless of the octave, making them useful for analyzing harmonic content in heart sounds.
+
+\vspace{0.5cm}\noindent
+\textbf{RMS}\newline
+Root Mean Square (RMS) measures the magnitude of varying quantities, in this case, the amplitude of an audio signal. It is a straightforward way to compute the energy of the signal over a given time frame. RMS is useful in audio analysis for detecting volume changes and can help identify different types of heartbeats based on their energy levels.
+
+\vspace{0.5cm}\noindent
+\textbf{ZCR}\newline
+Zero-Crossing Rate (ZCR) is the rate at which a signal changes sign, indicating how often the signal crosses the zero amplitude line. It is particularly useful for detecting the noisiness and the temporal structure of the signal. In heartbeat classification, ZCR can help differentiate between normal and abnormal sounds by highlighting changes in signal periodicity.
+
+\vspace{0.5cm}\noindent
+\textbf{CQT}\newline
+Constant-Q Transform (CQT) is a time-frequency representation with a logarithmic frequency scale, making it suitable for musical applications. It captures more detail at lower frequencies, which is essential for analyzing the low-frequency components of heart sounds. CQT can help identify rhythmic and harmonic patterns in the audio.
+
+\vspace{0.5cm}\noindent
+\textbf{Spectral Centroid}\newline
+The spectral centroid indicates the center of mass of the spectrum and is often perceived as the brightness of a sound. It is calculated as the weighted mean of the frequencies present in the signal, with their magnitudes as weights. In heart sound analysis, a higher spectral centroid can indicate sharper, more pronounced sounds, while a lower centroid suggests smoother sounds.
+
+\vspace{0.5cm}\noindent
+\textbf{Spectral Bandwidth}\newline
+Spectral bandwidth measures the width of the spectrum around the centroid, providing an indication of the range of frequencies present. It is calculated as the square root of the variance of the spectrum. This feature helps in understanding the spread of the frequency components in the heart sounds, which can be indicative of different heart conditions.
+
+\vspace{0.5cm}\noindent
+\textbf{Spectral Roll-off}
+Spectral roll-off is the frequency below which a certain percentage of the total spectral energy lies. It is typically set at 85\% and helps distinguish between harmonic and non-harmonic content. In heartbeat classification, spectral roll-off can be used to differentiate between sounds with a concentrated energy distribution and those with more dispersed energy.
+
+\subsection{Sample Rate and Interval Selection}
 
 \subsection{Results}
 
