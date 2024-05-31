@@ -65,17 +65,73 @@ typically set at 85\% and helps distinguish between harmonic and non-harmonic co
 spectral roll-off can be used to differentiate between sounds with a concentrated energy distribution and those with more dispersed energy.
 
 \subsection{Methodology}
-We extracted the features from the audio signals using the \textit{Librosa} library in Python. It is worth to underline three main choice in the extraction
-methodology that have a direct impact on the results:
+We extracted the features from the audio signals using the \textit{Librosa} library in Python. It is worth to underline four main aspects in the extraction
+methodology having a direct impact on the results:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Normalization}: the audio are loaded using the \textit{torchaudio.load()} function, which normalized the audio signals in the range [-1, 1]. This is important to ensure that the features are on the same scale and to prevent the model from being biased towards features with larger values.
     \item \textbf{Audio Segmentation}: to extract features, we divided the audio recordings into chunks of a given length (in seconds). This segmentation allowed us to analyze the impact of different extraction intervals on model performance, additionally it allow for augmenting the data available. 
     \item \textbf{Sampling Rate}: while literature on spoken language often suggests that 16000 Hz is sufficient, it was necessary to assess the best sampling rate for heartbeat sounds specifically. We evaluated two sampling rates to determine the optimal rate for heartbeat sounds. 
     \item \textbf{Hop and Window Size}: the hop size determines the number of samples between successive windows, while the window size determines the number of samples considered. Each feature was extracted using the same window length and hop length facilitating a fair assessment of each feature's contribution to the classification task. 
 \end{itemize}
-The libray used for the extraction is \textit{Librosa}, which is a Python package for music and audio analysis. 
+The library used for the extraction is \textit{Librosa}, which is a Python package for music and audio analysis. 
 
 \subsection{Sample Rate and Interval Selection}
+
+
+\section{Methodology}
+
+\subsection{Sampling Rate and Interval Choice}
+
+\textbf{Experimental Setup}\newline
+We trained various models (Random Forest, Support Vector Machine, Logistic Regression) with different features (Chroma, MFCC\_30, MFCC\_120, CQT\_30, CQT\_70),
+sampling rates (mixed, 4000 Hz), and extraction intervals (0.5s, 1s, 2s, 3s). Features were used as extracted without any additional processing. 
+The models were trained on 80\% of the data and tested on the remaining 20\%.
+
+\subsubsection{Findings on Sampling Rate}
+Our experiments revealed no clear advantage of using a mix of frequencies over a fixed sample rate, independently of the metric used.
+Specifically, a fixed sampling rate of 4000 Hz was found to reduce the risk of bias introduction, improve efficiency, 
+and enable the use of a wider variety of features. This sampling rate provided a consistent and reliable basis 
+for feature extraction, as demonstrated in Figure \ref{fig:sample_rate_impact}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\columnwidth]{./images/sample_rate_impact.png}
+    \caption{Comparison of the macro F1 score for different sampling rates.}
+    \label{fig:sample_rate_impact}
+\end{figure}
+
+\subsubsection{Findings on Extraction Interval}
+The choice of extraction interval had a significant impact on the number of samples and the class distribution, as shown in Figure \ref{fig:interval_class_distribution}.
+To address the high class imbalance, we used the macro F1 score and Matthews Correlation Coefficient (MCC) as evaluation metrics. 
+Our results indicated that a 2-second interval yielded the best performance. However, this choice also reduced the number of samples, 
+potentially causing issues during training and testing, especially with more complex models. 
+
+\begin{figure*}[htbp]
+    \centering
+    \includegraphics[width=1\textwidth]{./images/interval_class_distribution.png}
+    \caption{Class distribution for different extraction intervals.}
+    \label{fig:interval_class_distribution}
+\end{figure*}
+
+As a compromise, we recommend using a 1-second interval. This interval offers a good balance between 
+the number of samples and the class distribution, ensuring robust model performance while maintaining a 
+sufficient dataset size. Figures \ref{fig:interval_impact_macrof1} and \ref{fig:interval_impact_mcc} illustrate the impact of 
+different extraction intervals on the macro F1 score and MCC, respectively.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\columnwidth]{./images/interval_impact_macrof1.png}
+    \caption{Comparison of the macro F1 score for different extraction intervals.}
+    \label{fig:interval_impact_macrof1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\columnwidth]{./images/interval_impact_mcc.png}
+    \caption{Comparison of the MCC for different extraction intervals.}
+    \label{fig:interval_impact_mcc}
+\end{figure}
+
 
 \subsection{Results}
 
