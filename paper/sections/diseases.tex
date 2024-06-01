@@ -1,35 +1,112 @@
-\section{Heart Diseases}
+\section{Heart Sound Categories}
+Heart sounds can be categorized into different classes based on their acoustic characteristics and clinical significance.
+Accurate classification of these sounds is essential for diagnosing and treating a variety of cardiac conditions.
+The primary categories include Normal heart sounds, Murmurs, Extra Heart Sounds, Artifacts, and Extra Systoles.
+Understanding the distinct features and clinical implications of each class is a crucial step before building a
+machine learning model to classify heartbeats.
+This phase is particularly important for the identification of patterns that are characteristic of specific classes,
+which in turn guides the selection of features to extract from the audio.
+This knowledge aids in identifying specific patterns and anomalies within the heart sounds,
+leading to more precise and reliable model predictions.
+\subsection{Normal}
+The Normal category includes recordings of typical, healthy heart sounds. These sounds exhibit the characteristic ``lub-dub, lub-dub'' pattern,
+where ``lub'' (S1) represents the closing of the atrioventricular valves and ``dub'' (S2) signifies the closing of the semilunar valves.
+In a normal heart, the time interval between ``lub'' and ``dub'' is shorter than the interval from ``dub'' to the next ``lub,''
+especially when the heart rate is below 140 beats per minute. Most normal heart rates at rest fall between 60 and 100 beats per minute,
+though rates can vary from 40 to 140 beats per minute based on factors such as age and activity level.
+Recordings may include background noises like traffic or radio sounds and may capture incidental noises such as breathing or microphone
+contact with clothing or skin. It contains both clean and noisy normal recordings,
+the latter featuring significant background noise or distortion, which simulates real-world conditions.\\
+Figure \ref{fig:normal_heart_beat_audio} shows a sample of a normal heart beat audio.
+The characteristic ``lub-dub, lub-dub'' pattern can be observed, where the peaks represent the ``lub'' (S1) and ``dub'' (S2) sounds of a healthy heart.
 
-\subsection{Normal Category}
-In the Normal category, there are normal, healthy heart sounds. These may contain noise in the final second of the recording as the device is removed from the body.
-They may contain a variety of background noises (from traffic to radios). They may also contain occasional random noise corresponding to breathing, or brushing the
-microphone against clothing or skin. A normal heart sound has a clear ``lub dub, lub dub'' pattern, with the time from ``lub'' to ``dub'' shorter than the time from ``dub'' to the next
-``lub'' (when the heart rate is less than 140 beats per minute). Note the temporal description of ``lub'' and ``dub'' locations over time in the following illustration:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.8\columnwidth]{../images/normal_heart_beat_audio.png}
+    \caption{Sample of normal heart beat audio.}
+    \label{fig:normal_heart_beat_audio}
+\end{figure}
+\noindent
 
-In medicine, we call the lub sound ``S1'' and the dub sound ``S2''. Most normal heart rates at rest will be between about 60 and 100 beats (``lub dub''s) per minute.
-However, note that since the data may have been collected from children or adults in calm or excited states,
-the heart rates in the data may vary from 40 to 140 beats or higher per minute. Dataset B also contains noisy\_normal data
-normal data which includes a substantial amount of background noise or distortion. You may choose to use this or ignore it,
-however, the test set will include some equally noisy examples.
 
-\subsection{Murmur Category}
-Heart murmurs sound as though there is a ``whooshing, roaring, rumbling, or turbulent fluid'' noise in one of two temporal locations: (1) between ``lub'' and ``dub'', or (2) between ``dub'' and ``lub''.
-They can be a symptom of many heart disorders, some serious. There will still be a ``lub'' and a ``dub''. One of the things that confuses non-medically trained people is that murmurs happen
-between lub and dub or between dub and lub; not on lub and not on dub. Below, you can find an asterisk* at the locations a murmur may be.\\
-Dataset B also contains noisy\_murmur data murmur data which includes a substantial amount of background noise or distortion. You may choose to use this or ignore it,
-however, the test set will include some equally noisy examples.
 
-\subsection{Extra Heart Sound Category}
-Extra heart sounds can be identified because there is an additional sound, e.g., a ``lub-lub dub'' or a ``lub dub-dub''. An extra heart sound may not be a sign of disease.
-However, in some situations, it is an important sign of disease, which if detected early could help a person. The extra heart sound is important to be able to detect as
 
-\subsection{Artifact Category}
-In the Artifact category, there are a wide range of different sounds, including feedback squeals and echoes, speech, music, and noise. There are usually no discernible heart sounds,
-and thus little or no temporal periodicity at frequencies below 195 Hz. This category is the most different from the others. It is important to be able to distinguish this category
-from the other three categories, so that someone gathering the data can be instructed to try again.
+\subsection{Murmur}
+Heart murmurs are abnormal sounds during the heartbeat cycle, such as a ``whooshing, roaring, rumbling, or turbulent fluid'' noise, heard between
+the ``lub'' and ``dub'' (systolic murmur) or between ``dub'' and ``lub'' (diastolic murmur).
+These murmurs are typically indicative of turbulent blood flow in the heart and can signal various heart conditions, some of which may be serious.
+It is crucial to distinguish murmurs from the normal ``lub-dub'' sounds since they occur between the primary heart sounds and not concurrently with them.
+It also includes noisy murmur data, which mimics real-world recording scenarios by incorporating significant background noise and distortions.\\
+Figure \ref{fig:murmur_heart_beat_audio} shows a sample of a murmur heart beat audio.
+The presence of additional sounds between the ``lub'' and ``dub'' peaks can be observed, indicating the characteristic
+``whooshing, roaring, rumbling, or turbulent fluid'' noise typical of heart murmurs.
 
-\subsection{Extrasystole Category}
-Extrasystole sounds may appear occasionally and can be identified because there is a heart sound that is out of rhythm involving extra or skipped heartbeats,
-e.g., a ``lub-lub dub'' or a ``lub dub-dub''. (This is not the same as an extra heart sound as the event is not regularly occurring.) An extrasystole may not be a sign of disease.
-It can happen normally in an adult and can be very common in children. However, in some situations, extrasystoles can be caused by heart diseases. If these diseases are detected earlier,
-then treatment is likely to be more effective. Below, note the temporal description of the extra heart sounds:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.8\columnwidth]{../images/murmur_heart_beat_audio.png}
+    \caption{Sample of murmur heart beat audio.}
+    \label{fig:murmur_heart_beat_audio}
+\end{figure}
+\noindent
+
+
+\subsection{Extra Heart Sound}
+Extra heart sounds are characterized by an additional sound in the cardiac cycle, producing patterns such as ``lub-lub dub'' or ``lub dub-dub''.
+These sounds can arise from physiological or pathological conditions. For example, a third heart sound (S3) may indicate heart failure or volume overload,
+while a fourth heart sound (S4) can be associated with a stiff or hypertrophic ventricle.
+Detecting these extra sounds is important for identifying potential heart diseases early, allowing for timely intervention and management.
+Figure \ref{fig:extrahls_heart_beat_audio} shows a sample of an extra heart sound audio.
+The presence of additional peaks within the normal ``lub-dub'' pattern indicates extra heart sounds, which can be
+critical for diagnosing various heart conditions.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.8\columnwidth]{../images/extrastoles_heart_beat_audio.png}
+    \caption{Sample of extra heart sound audio.}
+    \label{fig:extrahls_heart_beat_audio}
+\end{figure}
+\noindent
+
+\subsection{Artifact}
+The Artifact category consists of recordings with non-cardiac sounds, including feedback squeals, echoes, speech, music, and various types of noise.
+These recordings generally lack discernible heart sounds and do not exhibit the temporal periodicity typical of heartbeats at frequencies below 195 Hz.
+Accurately identifying artifacts is essential to avoid misinterpreting non-cardiac sounds as pathological heart sounds,
+ensuring that data collection efforts focus on genuine heart sounds.
+Figure \ref{fig:artifact_heart_beat_audio} shows a sample of an artifact heart beat audio, there can be observed that there is not a clear pattern in the audio.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.8\columnwidth]{../images/artifact_heart_beat_audio.png}
+    \caption{Sample of artifact heart beat audio }\label{fig:artifact_heart_beat_audio}
+\end{figure}
+\noindent
+\subsection{Extra systoles}
+Extra systoles refers to extra or skipped heartbeats, resulting in irregular patterns such as ``lub-lub dub'' or ``lub dub-dub''.
+Unlike the regular extra heart sounds, extra systoles are sporadic and do not follow a consistent rhythm.
+These premature beats can occur in healthy individuals, particularly children, but they may also be associated with various heart diseases.
+Identifying extra systoles is crucial as they can be early indicators of cardiac conditions that might require medical attention
+if they occur frequently or in certain patterns.\\
+In the audio signal depicted in Figure \ref{fig:extrastoles_heart_beat_audio}, irregularities within the normal “lub-dub” pattern are evident.
+These irregularities manifest as additional peaks or skipped beats, indicating extra systoles.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.8\columnwidth]{../images/extrahls_heart_beat_audio.png}
+    \caption{Sample of extra systoles heart beat audio }\label{fig:extrastoles_heart_beat_audio}
+\end{figure}
+\noindent
+\subsection{Comparison of Heart Sounds}
+In Figure \ref{fig:comparison_heart_beat_audio}, a comparison of the different classes of heart sounds can be observed.\\
+As we can see, the “Artifact” signal appears erratic with no consistent pattern, likely representing noise or interference rather than true heart sounds.\\
+The “Murmurs” signal shows irregular fluctuations in amplitude, which could indicate turbulent blood flow typically associated with murmurs. \\
+The signal for “Extra Heart Beat Sound” has occasional spikes in amplitude that stand out from the baseline.\\
+The “Normal” signal appears more uniform and regular compared to the others, reflecting the expected rhythm of a healthy heartbeat.
+FInally, the signal for “Extra Systoles” shows extra spikes at irregular intervals,
+indicating unexpected contractions of the heart muscle (systoles) occurring outside the normal rhythm.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.8\columnwidth]{../images/comparison_heart_beat_audio.png}
+    \caption{Comparison of the different classes of heart sounds.}
+    \label{fig:comparison_heart_beat_audio}
+\end{figure}
+\noindent
