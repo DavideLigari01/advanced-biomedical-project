@@ -65,7 +65,7 @@ typically set at 85\% and helps distinguish between harmonic and non-harmonic co
 spectral roll-off can be used to differentiate between sounds with a concentrated energy distribution and those with more dispersed energy.
 
 \subsection{Methodology}
-We extracted the features from the audio signals using the \textit{Librosa} library in Python. It is worth to underline four main aspects in the extraction
+The features were extracted from the audio signals using the \textit{Librosa} library in Python. It is worth to underline four main aspects in the extraction
 methodology having a direct impact on the results:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Normalization}: the audio are loaded using the \textit{torchaudio.load()} function, which normalized the audio signals in the range [-1, 1]. This is important to ensure that the features are on the same scale and to prevent the model from being biased towards features with larger values.
@@ -75,14 +75,8 @@ methodology having a direct impact on the results:
 \end{itemize}
 The library used for the extraction is \textit{Librosa}, which is a Python package for music and audio analysis. 
 
-\subsection{Sample Rate and Interval Selection}
-
-
-\section{Methodology}
-
-\subsection{Sampling Rate and Interval Choice}
-
-\textbf{Experimental Setup}\newline
+\subsection{Sampling Rate and Interval Selection}
+To determine the optimal sampling rate and extraction interval for heartbeat classification, a series of experiments was conducted.
 We trained various models (Random Forest, Support Vector Machine, Logistic Regression) with different features (Chroma, MFCC\_30, MFCC\_120, CQT\_30, CQT\_70),
 sampling rates (mixed, 4000 Hz), and extraction intervals (0.5s, 1s, 2s, 3s). Features were used as extracted without any additional processing. 
 The models were trained on 80\% of the data and tested on the remaining 20\%.
