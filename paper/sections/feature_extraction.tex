@@ -69,13 +69,13 @@ The features were extracted from the audio signals using the \textit{Librosa} li
 methodology having a direct impact on the results:
 \begin{itemize}[leftmargin=*]
     \item \textbf{Normalization}: the audio are loaded using the \textit{torchaudio.load()} function, which normalized the audio signals in the range [-1, 1]. This is important to ensure that the features are on the same scale and to prevent the model from being biased towards features with larger values.
-    \item \textbf{Audio Segmentation}: to extract features, we divided the audio recordings into chunks of a given length (in seconds). This segmentation allowed us to analyze the impact of different extraction intervals on model performance, additionally it allow for augmenting the data available. 
+    \item \textbf{Audio Clipping}: to extract features, we divided the audio recordings into chunks of a given length (in seconds). This segmentation allowed us to analyze the impact of different extraction intervals on model performance, additionally it allow for augmenting the data available. 
     \item \textbf{Sampling Rate}: while literature on spoken language often suggests that 16000 Hz is sufficient, it was necessary to assess the best sampling rate for heartbeat sounds specifically. We evaluated two sampling rates to determine the optimal rate for heartbeat sounds. 
     \item \textbf{Hop and Window Size}: the hop size determines the number of samples between successive windows, while the window size determines the number of samples considered. Each feature was extracted using the same window length and hop length facilitating a fair assessment of each feature's contribution to the classification task. 
 \end{itemize}
 The library used for the extraction is \textit{Librosa}, which is a Python package for music and audio analysis. 
 
-\subsection{Sampling Rate and Interval Selection}
+\subsection{Sampling Rate and Interval Selection} \label{sec:sr_extraction_interval}
 To determine the optimal sampling rate and extraction interval for heartbeat classification, a series of experiments was conducted.
 We trained various models (Random Forest, Support Vector Machine, Logistic Regression) with different features (Chroma, MFCC\_30, MFCC\_120, CQT\_30, CQT\_70),
 sampling rates (mixed, 4000 Hz), and extraction intervals (0.5s, 1s, 2s, 3s). Features were used as extracted without any additional processing. 
