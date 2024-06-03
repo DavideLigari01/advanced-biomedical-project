@@ -36,20 +36,54 @@ In the large majority of medical problems,
 % \end{table}
 
 
+\subsection{Models Overview}
+
+\subsubsection{LightGBM}
+LightGBM (Light Gradient Boosting Machine) is a gradient boosting framework that builds decision trees in a leaf-wise manner. Unlike level-wise growth used in other boosting algorithms, LightGBM grows trees leaf-wise, leading to better optimization.
+
+The objective function to minimize is:
+\begin{equation*}
+L = \sum_{i=1}^{n} l(y_i, \hat{y}_i) + \sum_{k} \Omega(f_k)
+\end{equation*}
+where $l$ is the loss function (e.g., mean squared error for regression), $y_i$ is the true label, $\hat{y}_i$ is the predicted label, and $\Omega$ is the regularization term to avoid overfitting.
+
+\subsubsection{XGBoost}
+XGBoost (Extreme Gradient Boosting) enhances the gradient boosting technique by optimizing the loss function using second-order Taylor expansion. The objective function is:
+\begin{equation*}
+L(\theta) = \sum_{i=1}^{n} l(y_i, \hat{y}_i(t)) + \sum_{k} \Omega(f_k)
+\end{equation*}
+where $l$ is the loss function, $y_i$ is the true value, $\hat{y}_i(t)$ is the prediction at the $t$-th iteration, and $\Omega(f_k)$ is the regularization term. The regularization term is given by:
+\begin{equation*}
+\Omega(f) = \gamma T + \frac{1}{2} \lambda \sum_{j=1}^{T} w_j^2
+\end{equation*}
+where $T$ is the number of leaves, $w_j$ are the leaf weights, and $\gamma$ and $\lambda$ are regularization parameters.
+
+\subsubsection{CatBoost}
+CatBoost (Categorical Boosting) is designed to handle categorical features natively. It uses ordered boosting to avoid overfitting and provides efficient handling of categorical data without extensive preprocessing. The model learns using the following objective function:
+\begin{equation*}
+L = \sum_{i=1}^{n} l(y_i, \hat{y}_i) + \lambda \sum_{j=1}^{m} ||w_j||^2
+\end{equation*}
+where $l$ is the loss function, $y_i$ is the true label, $\hat{y}_i$ is the predicted label, $\lambda$ is the regularization parameter, and $w_j$ are the model weights.
+
+\subsubsection{Random Forest}
+Random Forest is an ensemble method that builds multiple decision trees using bootstrap samples and random feature subsets. The final prediction is made by averaging the predictions (regression) or majority voting (classification). The prediction for a regression problem is:
+\begin{equation*}
+\hat{y} = \frac{1}{T} \sum_{t=1}^{T} h_t(x)
+\end{equation*}
+where $T$ is the number of trees, $h_t$ is the prediction of the $t$-th tree, and $x$ is the input feature vector.
+
+\subsubsection{MLP (Multilayer Perceptron)}
+MLP (Multilayer Perceptron) is a type of feedforward neural network with one or more hidden layers. Each neuron computes a weighted sum of inputs, applies an activation function, and passes the result to the next layer. The output of a neuron in layer $l$ is:
+\begin{equation*}
+a_i^{(l)} = f \left( \sum_{j=1}^{n^{(l-1)}} w_{ij}^{(l)} a_j^{(l-1)} + b_i^{(l)} \right)
+\end{equation*}
+where $a_i^{(l)}$ is the activation of the $i$-th neuron in layer $l$, $w_{ij}^{(l)}$ is the weight between neuron $j$ in layer $l-1$ and neuron $i$ in layer $l$, $b_i^{(l)}$ is the bias term, and $f$ is the activation function (e.g., ReLU, sigmoid).
+
+\end{document}
 
 
 
 
 
-\subsection{Model on specific classes}
 
-\subsubsection{Explanation of the models}
-\subsubsection{Methodology}
-\subsubsection{Results}
 
-\subsection{Models on all classes}
-\subsubsection{Explanation of the models}
-\subsubsection{Methodology}
-\subsubsection{Results}
-
-\subsection{Best model analysis}
