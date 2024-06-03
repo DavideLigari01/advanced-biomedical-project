@@ -3,18 +3,24 @@
 Given the large number of features (338 in total), it was necessary to identify and remove features that are poorly correlated with
 the target variable as well as those that are highly correlated with each other. Due to the high number of features, a visual approach,
 such as a correlation matrix, was not feasible. Instead, two filters were applied to select the most
-relevant features using the Spearman correlation coefficient, as the normality test failed.
+relevant features using the Spearman correlation coefficient, as the normality test failed.\\
+The first filter is based on the correlation between the features and the target variable. Features with a correlation below a certain
+threshold with the target variable are removed.\\
+The second filter focuses on the correlation among the features themselves.
+It counts, for each feature, the number of other features with which it has a correlation above a certain threshold. Features with a
+number of correlations above a specified threshold are then removed.\\
 
 \begin{algorithm}
     \caption{Feature Selection Process}
     \begin{algorithmic}[1]
-        \State \textbf{Step 1:} Calculate the Spearman correlation coefficient for each feature with the target variable.
-        \State \textbf{Step 2:} Apply the first filter to remove features with a correlation below a certain threshold with the target variable.
-        \State \textbf{Step 3:} Calculate the pairwise Spearman correlation coefficients among all features.
-        \State \textbf{Step 4:} Apply the second filter to remove features that have a high number of correlations (above a certain threshold)
+        \State \textbf{Step 1:} Compute  the normal test (D'Agostino Pearson).
+        \State \textbf{Step 2:} Compute the Spearman correlation coefficient for each feature with the target variable.
+        \State \textbf{Step 3:} Apply the first filter to remove features with a correlation below a certain threshold with the target variable.
+        \State \textbf{Step 4:} Compute the correlation matrix among all features.
+        \State \textbf{Step 5:} Apply the second filter to remove features that have a high number of correlations (above a certain threshold)
         with other features.
-        \State \textbf{Step 5:} Choose threshold values empirically and apply the filters using various combinations of these thresholds.
-        \State \textbf{Step 6:} Train Random Forest models on the filtered data to evaluate performance and select the best combination of thresholds.
+        \State \textbf{Step 6:} Choose threshold values empirically and apply the filters using various combinations of these thresholds.
+        \State \textbf{Step 7:} Train Random Forest models on the filtered data to evaluate performance and select the best combination of thresholds.
     \end{algorithmic}
 \end{algorithm}
 
@@ -22,7 +28,7 @@ relevant features using the Spearman correlation coefficient, as the normality t
 
 Threshold values were chosen empirically and the filters were applied using the combinations shown in Table \ref{tab:threshold_values}.
 Using the filtered data, Random Forest models were trained and evaluated, as Random Forest was found to be the best performing model.
-The optimal combination of thresholds was found to be: threshold 1 = 0, threshold 2 = 0.6, resulting in 30 features.
+The optimal combination of thresholds was found to be: threshold 1 = 0, threshold 2 = 0.6 and number of features = 30, resulting in 30 features.
 
 \rowcolors{2}{blue!8}{blue!18}
 \begin{table}[h]
