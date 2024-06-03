@@ -1,39 +1,65 @@
-\section{Model Selection}
-In the large majority of medical problems, 
-% \begin{table}[h!]
-%     \centering
-%     \begin{tabular}{|l|l|}
-%         \hline
-%         \textbf{Nome}           & \textbf{Architettura}                                 \\ \hline
-%         XGBoost                 & -                                                     \\ \hline
-%         CatBoost                & -                                                     \\ \hline
-%         LightGBM                & -                                                     \\ \hline
-%         MLP\_Basic              & (128, 64, 32)                                         \\ \hline
-%         MLP\_Ultra              & (512, 256, 128, 64, 32)                               \\ \hline
-%         MLP\_Large              & (256, 128, 64, 32)                                    \\ \hline
-%         MLP\_Small              & (64, 32)                                              \\ \hline
-%         MLP\_Tiny               & (32, 16)                                              \\ \hline
-%         MLP\_Reverse            & (32, 64, 128, 256, 512, 256, 128, 64, 32)             \\ \hline
-%         MLP\_Bottleneck         & (512, 64, 32)                                         \\ \hline
-%         MLP\_Rollercoaster      & (512, 128, 256, 128, 256, 64, 32)                     \\ \hline
-%         MLP\_Hourglass          & (512, 256, 128, 64, 32, 64, 128, 256, 512)            \\ \hline
-%         MLP\_Pyramid            & (1024, 512, 256, 128, 128, 128, 64, 32)               \\ \hline
-%         MLP\_Wide               & (1024, 1024)                                          \\ \hline
-%         MLP\_WideUltra          & (1024, 1024, 128, 32)                                 \\ \hline
-%         MLP\_Sparse             & (32, 16, 8)                                           \\ \hline
-%         MLP\_Dropout            & (128, 64, 32)                                         \\ \hline
-%         MLP\_Ensemble1          & \footnotesize{ MLP\_Basic, MLP\_Large, MLP\_Ultra     \\ }\hline
-%         MLP\_Ensemble2          & RandomForest, MLP\_Ultra                              \\ \hline
-%         MLP\_Ensemble3          & MLP\_Rollercoaster, MLP\_Large                        \\ \hline
-%         MLP\_Ensemble4          & MLP\_Rollercoaster, MLP\_Large, MLP\_Ultra            \\ \hline
-%         MLP\_Ensemble5          & RandomForest, MLP\_Ultra, MLP\_Rollercoaster          \\ \hline
-%         MLP\_Ensemble6          & MLP\_Rollercoaster, MLP\_Large, MLP\_Ultra, MLP\_Wide \\ \hline
-%         ALL\_Ensemble           & All models majority vote                              \\ \hline
-%         CatBoost\_ALL\_Ensemble & All models CatBoost                                   \\ \hline
-%     \end{tabular}
-%     \caption{Nomi dei modelli e relative architetture}
-%     \label{tab:models}
-% \end{table}
+\section{Models}
+To effectively address the classification problem, we strategically split it into three distinct tasks:
+
+\begin{enumerate}[label=\textbf{\arabic*.}, leftmargin=0.5cm]
+    \item \textbf{Multiclass Classification:} This task addresses the broadest scope of prediction by classifying heartbeats 
+    into one of the five classes present in the dataset. This is the most challenging task due to the imbalanced nature of
+    the classes and the need to differentiate between multiple disease categories.
+    
+    \item \textbf{Normal vs Abnormal vs Artifact Classification:} This task takes a more focused approach by categorizing 
+    heartbeats into three distinct classes: normal, abnormal, or artifact. It mitigates the challenge of imbalanced classes 
+    present in the dataset and allows for a better understanding of the nuances within each category. Additionally, 
+    it allows for a false positive rate minimization scenario, where the final goal is not the overall accuracy, but the 
+    minimization of false normal predictions. This is particularly important in a medical context, where misclassifying
+    an abnormal heartbeat as normal can have severe consequences.
+    
+    \item \textbf{Diseases-only Classification:} This task narrows the focus exclusively to the prediction of diseases, 
+    excluding normal and artifact classes. It allows for a deeper exploration of the underlying diseases present in the 
+    dataset while filtering out irrelevant data points. By isolating disease-related patterns and features, the model 
+    can prioritize accuracy in disease prediction without the potential confounding factors introduced by normal and artifact heartbeats.
+\end{enumerate}
+
+\noindent
+In all cases we trained a variety of models, with the aim of finding the best-performing model for each task.
+The models used in this study are listed in Table \ref{tab:models}.
+
+\rowcolors{2}{blue!8}{blue!18}
+\begin{table}[h!]
+    \centering
+    \footnotesize
+    \begin{tabular}{|l|l|}
+        \hline
+        \textbf{Name}           & \textbf{Architecture (hidden layers)}                                 \\ \hline
+	   Random Forest                 & -                                                     \\ \hline
+        XGBoost                 & -                                                     \\ \hline
+        CatBoost                & -                                                     \\ \hline
+        LightGBM                & -                                                     \\ \hline
+        MLP\_Basic              & (128, 64, 32)                                         \\ \hline
+        MLP\_Ultra              & (512, 256, 128, 64, 32)                               \\ \hline
+        MLP\_Large              & (256, 128, 64, 32)                                    \\ \hline
+        MLP\_Small              & (64, 32)                                              \\ \hline
+        MLP\_Tiny               & (32, 16)                                              \\ \hline
+        MLP\_Reverse            & (32, 64, 128, 256, 512, 256, 128, 64, 32)             \\ \hline
+        MLP\_Bottleneck         & (512, 64, 32)                                         \\ \hline
+        MLP\_Rollercoaster      & (512, 128, 256, 128, 256, 64, 32)                     \\ \hline
+        MLP\_Hourglass          & (512, 256, 128, 64, 32, 64, 128, 256, 512)            \\ \hline
+        MLP\_Pyramid            & (1024, 512, 256, 128, 128, 128, 64, 32)               \\ \hline
+        MLP\_Wide               & (1024, 1024)                                          \\ \hline
+        MLP\_WideUltra          & (1024, 1024, 128, 32)                                 \\ \hline
+        MLP\_Sparse             & (32, 16, 8)                                           \\ \hline
+        MLP\_Dropout            & (128, 64, 32)                                         \\ \hline
+        MLP\_Ensemble1          & MLP\_Basic, Large, Ultra                    \\ \hline
+        MLP\_Ensemble2          & RandomForest, MLP\_Ultra                              \\ \hline
+        MLP\_Ensemble3          & MLP\_Rollercoaster, Large                        \\ \hline
+        MLP\_Ensemble4          & MLP\_Rollercoaster, Large, Ultra            \\ \hline
+        MLP\_Ensemble5          & RandomForest, MLP\_Ultra, Rollercoaster          \\ \hline
+        MLP\_Ensemble6          & MLP\_Rollercoaster, Large, Ultra, Wide \\ \hline
+        ALL\_Ensemble           & All models majority vote                              \\ \hline
+        CB\_ALL\_Ensemble       & All models CatBoost                                   \\ \hline
+    \end{tabular}
+    \caption{Models names and architectures.}
+    \label{tab:models}
+\end{table}
 
 
 \subsection{Models Overview}
