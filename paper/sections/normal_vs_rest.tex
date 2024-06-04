@@ -18,22 +18,46 @@ The evaluation metrics included the ROC curve, macro F1 score, and balanced accu
 
 
 \subsubsection{Results}
-The initial results are illustrated through the ROC curves for all the models. 
-To handle the three-class problem, we employed the one-vs-rest strategy, where each class is compared 
-against the other classes. Figure \ref{fig:ROC_normVSrest_allmodels} presents the ROC curves for 
-the normal class versus the other classes across all models.
-
+The initial evaluation is presented using the ROC curves for all models. To address 
+the three-class problem, we employed the one-vs-rest strategy, comparing each class against 
+the others. Figure \ref{fig:ROC_normVSrest_allmodels} displays the ROC curves for the normal 
+class versus the other classes across all models.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\columnwidth]{./images/ROC_normVSrest_allmodels.png}
-    \caption{ROC curves of the normal class against the rest of the classes for all the models.}
+    \caption{ROC curves for the normal class against the rest of the classes across all models.}
     \label{fig:ROC_normVSrest_allmodels}
 \end{figure}
 
-\noindent
-The results, as shown by the AUC values, indicate that the MLP model outperformed the others. Specifically, 
-MLP\_Ultra, MLP\_Rollercoaster, MLP\_Ensemble2 and MLP\_Ensemble4 achieved the highest AUC values of 0.95.
+The results, indicated by the AUC values, show that the MLP model outperformed the others. 
+Specifically, \textit{MLP\_Ensemble5} achieved the highest AUC value of 0.96, followed 
+by \textit{MLP\_Ultra}, \textit{MLP\_Rollercoaster}, \textit{MLP\_Ensemble2}, 
+and \textit{MLP\_Ensemble4}, all with an AUC of 0.95. \textit{MLP\_Ensemble5} also 
+had the highest MCC value in the multiclass classification task, confirming its superior performance.
 
+To further analyze model performance, we selected four FPR levels (1\%, 5\%, 10\%, 20\%) and 
+calculated the corresponding TPR. The consolidated results are shown in 
+Figure \ref{fig:normVSrest_all}, with detailed results for each FPR case available in the appendix.
+
+\begin{figure*}[htpb]
+    \centering
+    \includegraphics[width=1\textwidth]{./images/nomrVSrest_all.png}
+    \caption{TPR at different FPR levels for all models.}
+    \label{fig:normVSrest_all}
+\end{figure*}
+
+At each FPR level, \textit{MLP\_Ensemble5} outperformed the other models, 
+achieving TPRs of 43.4\%, 74.3\%, 86.6\%, and 95.8\% at the 1\%, 5\%, 10\%, and 20\% FPR levels, 
+respectively. Excluding \textit{MLP\_Ensemble5}, the best-performing model varied by 
+FPR level: \textit{MLP\_WideUltra} at 1\%, \textit{MLP\_Ultra} at 5\%, \textit{MLP\_Ensemble2} at 10\%, 
+and \textit{MLP\_Ensemble4} at 20\%.
+
+These outcomes highlight the task's challenges in creating a model that performs well across all FPR 
+levels and demonstrate the efficacy of a well-built ensemble model, which leverages the strengths of 
+different models to achieve optimal performance.
+
+\subsubsection{Best Model Analysis}
+%confmat of the models composing it vs confmat of the ensemble
 
 
