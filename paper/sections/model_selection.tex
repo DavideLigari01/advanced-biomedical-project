@@ -61,6 +61,14 @@ The models used in this study are listed in Table \ref{tab:models}.
     \label{tab:models}
 \end{table}
 
+\noindent
+The working principle of the basics models is briefly explained in the next section. As regard the ensemble models,
+they are built by combining the predictions of multiple base models. Specifically, from MLP\_Ensemble1 to MLP\_Ensemble6,
+we combined the predictions of the models listed in the name. The combination was done using the \textit{VotingClassifier}
+from the \textit{sklearn} library, with the \textit{soft} vote strategy. 
+The ALL\_Ensemble model combines the predictions of all the models above it, using a majority vote strategy. The CB\_ALL\_Ensemble model is similar to the ALL\_Ensemble model, but
+it uses the CatBoost algorithm to combine the predictions of the base models.
+
 
 \subsection{Models Overview}
 
