@@ -1,3 +1,17 @@
-\subsection{Normal VS Rest Model}
-\subsubsection{FPR Oriented Model}
+\subsection{Normal VS Abnormal VS Artifact Model}
+One of the primary concerns in applying machine learning models to the medical field is the potential 
+consequence of misclassifying abnormal conditions as normal. Specifically, in the case of heartbeats, 
+misclassifying an abnormal heartbeat as normal can have severe clinical implications. Therefore, 
+our focus shifts from achieving the highest overall accuracy to minimizing the false positive rate (FPR) 
+for the normal class. This approach ensures that fewer abnormal heartbeats are incorrectly classified as 
+normal, thereby enhancing patient safety and diagnostic reliability.
+
+\subsubsection{Methodology}
+To address this scenario we grouped the heartbeats into three classes: normal, abnormal, and artifact, with this
+latter including extrahls, murmurs and extrastoles. We then selected some models from the previous section,
+prioritizing those with a low risk score. The features used were the filtered ones and no class balancing was
+necessary since the classes were balanced.
+Each model was trained on 80\% of the data and tested on the remaining 20\%.
+
+
 \subsubsection{Results}
