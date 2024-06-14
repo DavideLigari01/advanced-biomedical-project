@@ -7,6 +7,7 @@ import torch
 import torchaudio
 import torchaudio.transforms as T
 import librosa
+import librosa.display
 from tqdm.notebook import tqdm
 import numpy as np
 import random
@@ -1277,3 +1278,102 @@ def split_col_groups(
         column4.extend([columns[-1]])
 
     return column1, column2, column3, column4
+
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+def plot_mfcc_to_spectrogram(audio: np.ndarray, ax: plt.Axes, sr: int = 4000, important_mfccs: list = None, title: str = None) -> None:
+    """
+    Plot the Mel spectrogram of an audio signal along with optional highlighting of important MFCCs.
+
+    Parameters:
+    audio (ndarray): The audio signal.
+    ax (plt.Axes): The matplotlib axis to plot on.
+    sr (int, optional): The sampling rate of the audio signal. Defaults to 4000.
+    important_mfccs (list, optional): A list of indices representing the important MFCCs to be highlighted. Defaults to None.
+    title (str, optional): The title of the plot. Defaults to None.
+    
+    Returns:
+    None
+    """
+    # Compute MFCCs
+    mfccs = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=20)
+    
+    # Compute Mel spectrogram
+    S = librosa.feature.melspectrogram(y=audio, sr=sr, n_mels=128)
+    S_db = librosa.power_to_db(S, ref=np.max)
+    
+    # Plot Mel spectrogram
+    img = librosa.display.specshow(S_db, sr=sr, x_axis='time', y_axis='mel', ax=ax)
+    ax.set(title=f'MFCC to Spectrogram - {title}')
+    ax.figure.colorbar(img, ax=ax, format='%+2.0f dB')
+    
+    # Highlight regions corresponding to important MFCCs
+    if important_mfccs is not None:
+        for mfcc in important_mfccs:
+            # Map MFCC to corresponding frequency bin
+            freq_bin = int(librosa.mel_frequencies(n_mels=128)[mfcc])
+            ax.axhline(y=freq_bin, color='w', linestyle='--')
+
+
+    
+    
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+
+def normalize(data: np.ndarray) -> np.ndarray:
+    """
+    Normalize the given data by scaling it between 0 and 1.
+
+    Parameters:
+    data (numpy.ndarray): The input data to be normalized.
+
+    Returns:
+    numpy.ndarray: The normalized data.
+
+    """
+    return (data - np.min(data)) / (np.max(data) - np.min(data))
+
+# --------------------------------------------------------------------
+# --------------------------------------------------------------------
+
+def plot_waveform_with_mfcc_attributions(audio: np.ndarray, ax: plt.Axes, sr: int = 4000, important_mfccs: list = None, title: str = None) -> None:
+    """
+    Plot the waveform of an audio signal along with the attributions computed for important MFCCs.
+
+    Parameters:
+    audio (ndarray): The audio signal.
+    ax (plt.Axes): The matplotlib axis to plot on.
+    sr (int): The sample rate of the audio signal (default is 4000).
+    important_mfccs (list): A list of indices representing the important MFCCs (default is None).
+    title (str): The title of the plot (default is None).
+
+    Returns:
+    None
+    """
+    # Compute MFCCs
+    mfccs = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=20)
+    
+    # Placeholder for attributions (to be computed for the important MFCCs)
+    attributions = np.zeros_like(audio)
+    
+    # Compute attributions (for simplicity, this example uses MFCC magnitudes as attributions)
+    for mfcc in important_mfccs:
+        # Reshape and stretch MFCC values to match the length of the audio
+        mfcc_values = mfccs[mfcc]
+        mfcc_stretched = np.interp(np.arange(len(audio)), np.linspace(0, len(audio), len(mfcc_values)), mfcc_values)
+        attributions += mfcc_stretched
+    
+    # Normalize both waveform and attributions
+    audio_norm = normalize(audio)
+    attributions_norm = normalize(attributions)
+    
+    # Plot waveform with attributions
+    ax.plot(audio_norm, label='Waveform')
+    ax.plot(attributions_norm, label='MFCC Attributions', color='r', alpha=0.6)
+    ax.legend()
+    if title:
+        ax.set_title(f'Waveform with MFCC Attributions - {title}')
