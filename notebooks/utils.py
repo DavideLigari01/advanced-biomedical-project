@@ -1309,13 +1309,15 @@ def plot_mfcc_to_spectrogram(audio: np.ndarray, ax: plt.Axes, sr: int = 4000, im
     img = librosa.display.specshow(S_db, sr=sr, x_axis='time', y_axis='mel', ax=ax)
     ax.set(title=f'MFCC to Spectrogram - {title}')
     ax.figure.colorbar(img, ax=ax, format='%+2.0f dB')
+    linestyles = ['-', '--', '-.', ':']
     
     # Highlight regions corresponding to important MFCCs
     if important_mfccs is not None:
-        for mfcc in important_mfccs:
+        for i, mfcc in enumerate(important_mfccs):
             # Map MFCC to corresponding frequency bin
             freq_bin = int(librosa.mel_frequencies(n_mels=128)[mfcc])
-            ax.axhline(y=freq_bin, color='w', linestyle='--')
+            ax.axhline(y=freq_bin, color='w', linestyle=linestyles[i], label=f'MFCC {mfcc}')
+            ax.legend(loc='upper right')
 
 
     
@@ -1355,7 +1357,7 @@ def plot_waveform_with_mfcc_attributions(audio: np.ndarray, ax: plt.Axes, sr: in
     None
     """
     # Compute MFCCs
-    mfccs = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=20)
+    mfccs = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=60)
     
     # Placeholder for attributions (to be computed for the important MFCCs)
     attributions = np.zeros_like(audio)
