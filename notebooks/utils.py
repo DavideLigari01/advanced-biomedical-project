@@ -1342,7 +1342,7 @@ def normalize(data: np.ndarray) -> np.ndarray:
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
 
-def plot_waveform_with_mfcc_attributions(audio: np.ndarray, ax: plt.Axes, sr: int = 4000, important_mfccs: list = None, title: str = None) -> None:
+def plot_waveform_with_mfcc_attributions(audio: np.ndarray, ax: plt.Axes, sr: int = 4000, important_mfccs: list = None, title: str = None, melkwargs:dict = {}) -> None:
     """
     Plot the waveform of an audio signal along with the attributions computed for important MFCCs.
 
@@ -1358,6 +1358,8 @@ def plot_waveform_with_mfcc_attributions(audio: np.ndarray, ax: plt.Axes, sr: in
     """
     # Compute MFCCs
     mfccs = librosa.feature.mfcc(y=audio, sr=sr, n_mfcc=60)
+    mfccs = torchaudio.transforms.MFCC(sample_rate=sr, n_mfcc=60, melkwargs=melkwargs)(torch.tensor(audio).unsqueeze(0)).squeeze(0).numpy()
+
     
     # Placeholder for attributions (to be computed for the important MFCCs)
     attributions = np.zeros_like(audio)
@@ -1372,10 +1374,13 @@ def plot_waveform_with_mfcc_attributions(audio: np.ndarray, ax: plt.Axes, sr: in
     # Normalize both waveform and attributions
     audio_norm = normalize(audio)
     attributions_norm = normalize(attributions)
+    mfcc_mean = np.mean(attributions_norm)
+    mfcc_mean = np.full_like(audio_norm, mfcc_mean)
     
     # Plot waveform with attributions
     ax.plot(audio_norm, label='Waveform')
     ax.plot(attributions_norm, label='MFCC Attributions', color='r', alpha=0.6)
+    ax.plot(mfcc_mean, label='Mean MFCC', color='g', alpha=0.9, linestyle='--')
     ax.legend()
     if title:
         ax.set_title(f'Waveform with MFCC Attributions - {title}')
