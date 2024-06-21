@@ -37,3 +37,4 @@
    1. Classi fortemente sbilanciate e difficili da bilanciare (incrementare il dataset), siamo dovuto scendere a parecchi compromessi (scelta intervallo)
    2. Impossibilità di creare il validation set per trovare gli hyperparametri, metriche di test sono biased
    3. Valutare con esperti medici le tecniche utilizzate e la loro coerenza con gli aspetti medici (Soptrattutto LIME)
+   4. Perimentare altre features
