@@ -33,7 +33,11 @@
       1. Permutation importance
       2. LIME, per identificare le features più significative per la predizione e risalire all'area dello spettrogramma più significativa (dove si trova l'anomalia)
       3. Permutation importance per ogni classe???
-8. Limitazioni:
+9. Other test:
+   1. CNN on spectral
+   2. CNN on waveform
+   3. Ensemble with 3 different models
+10. Limitazioni:
    1. Classi fortemente sbilanciate e difficili da bilanciare (incrementare il dataset), siamo dovuto scendere a parecchi compromessi (scelta intervallo)
    2. Impossibilità di creare il validation set per trovare gli hyperparametri, metriche di test sono biased
    3. Valutare con esperti medici le tecniche utilizzate e la loro coerenza con gli aspetti medici (Soptrattutto LIME)
