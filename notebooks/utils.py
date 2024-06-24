@@ -1316,8 +1316,11 @@ def plot_mfcc_to_spectrogram(audio: np.ndarray, ax: plt.Axes, sr: int = 4000, im
         for i, mfcc in enumerate(important_mfccs):
             # Map MFCC to corresponding frequency bin
             freq_bin = int(librosa.mel_frequencies(n_mels=128)[mfcc])
-            ax.axhline(y=freq_bin, color='w', linestyle=linestyles[i], label=f'MFCC {mfcc}')
+            ax.axhline(y=freq_bin, color='w', linestyle=linestyles[i], label=f'MFCC {mfcc} - {freq_bin} Hz')
             ax.legend(loc='upper right')
+            #print the frequency range in the bin
+            #print(f"MFCC {mfcc} corresponds to frequency range {freq_bin} Hz")
+            
 
 
     
@@ -1337,7 +1340,8 @@ def normalize(data: np.ndarray) -> np.ndarray:
     numpy.ndarray: The normalized data.
 
     """
-    return (data - np.min(data)) / (np.max(data) - np.min(data))
+    # return (data - np.min(data)) / (np.max(data) - np.min(data))
+    return (data / np.max(np.abs(data)))
 
 # --------------------------------------------------------------------
 # --------------------------------------------------------------------
