@@ -64,8 +64,61 @@ typically set at 85\% and helps distinguish between harmonic and non-harmonic co
 spectral roll-off can be used to differentiate between sounds with a concentrated energy distribution and those with more dispersed energy.
 \subsubsection{Sampling Rate Selection} % Andrea
 \label{sec:sampling_rate}
+The sampling rate of the data were heterogeneous, ranging from 4000 Hz to 44100 Hz, with a majority of the data being sampled at 4000 Hz.
+To assess the impact of the sampling rate on the classification performance, we trained different models on
+different features, extracted at different sampling rates and from various intervals. Each model is then 
+evaluated using different metrics, taking into account the class imbalance issue.
+We also consider a possible dependency between the sampling rate and the extraction interval, as shown 
+in Algorithm \ref{alg:sr_choice}.
+
+\begin{algorithm}
+    \small
+    \caption{Sampling rate choice}
+    \label{alg:sr_choice}
+    \begin{algorithmic}[1]
+    \State \textbf{Input:}
+    \State {features} = [\texttt{mfcc30 \& 120}, \texttt{cqt30 \& 70}, \texttt{chroma12}]
+    \State {sampling\_rates} = [\texttt{mix}, \texttt{4000}]
+    \State {extraction\_intervals} = [\texttt{0.5}, \texttt{1}, \texttt{2}, \texttt{3}]
+    \State {models} = [\texttt{rf}, \texttt{svm-rbf}, \texttt{lr}]
+    \State {metrics} = [\texttt{macrof1}, \texttt{mcc}]
+    
+    \vspace{0.2cm}
+    \For{sr \textbf{in} sampling\_rates}
+        \For{interval \textbf{in} extraction\_intervals}
+            \For{feature \textbf{in} features}
+                \State \textbf{extract} {feature} with {interval} at {sr}
+                \For{model \textbf{in} models}
+                    \State \textbf{train} {model} with extracted {feature}
+                    \For{metric \textbf{in} metrics}
+                        \State \textbf{evaluate} {model} with {metric}
+                    \EndFor
+                \EndFor 
+            \EndFor
+        \EndFor
+    \EndFor
+    
+    \State \textbf{Output:}
+    \State Given all the results, group by \texttt{model} and average the values of a specific \texttt{metric} across \texttt{features}
+    
+    \end{algorithmic}
+    \end{algorithm}
+
+    \noindent
+The results, reported in Figure \ref{fig:FE_sampling_rate.png} showed no evident advantage to using a mix of sampling frequencies over a fixed resampled sample rate. 
+Moreover, employing a fixed sample rate of 4000 Hz reduces the risk of introducing bias, enhances efficiency, 
+and permits the use of a broader range of features and models.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\columnwidth]{./images/FE_sampling_rate.png}
+    \caption{Comparison of the macro F1 score for different sampling rates.}
+    \label{fig:FE_sampling_rate.png}
+\end{figure}
+
 
 \subsubsection{Extraction Interval Selection}  % Andrea
 \label{sec:extraction_interval}
+The choice of the extraction interval 
 
 \subsubsection{Number of Features per Type} % Davide
