@@ -33,12 +33,30 @@
       1. Permutation importance
       2. LIME, per identificare le features più significative per la predizione e risalire all'area dello spettrogramma più significativa (dove si trova l'anomalia)
       3. Permutation importance per ogni classe???
-9. Other test:
+8. Other test:
    1. CNN on spectral
    2. CNN on waveform
    3. Ensemble with 3 different models
-10. Limitazioni:
-   1. Classi fortemente sbilanciate e difficili da bilanciare (incrementare il dataset), siamo dovuto scendere a parecchi compromessi (scelta intervallo)
-   2. Impossibilità di creare il validation set per trovare gli hyperparametri, metriche di test sono biased
-   3. Valutare con esperti medici le tecniche utilizzate e la loro coerenza con gli aspetti medici (Soptrattutto LIME)
-   4. Perimentare altre features
+9. Limitazioni:
+10. Classi fortemente sbilanciate e difficili da bilanciare (incrementare il dataset), siamo dovuto scendere a parecchi compromessi (scelta intervallo)
+11. Impossibilità di creare il validation set per trovare gli hyperparametri, metriche di test sono biased
+12. Valutare con esperti medici le tecniche utilizzate e la loro coerenza con gli aspetti medici (Soptrattutto LIME)
+13. Perimentare altre features
+
+## Paper Structure
+
+- Abstract (250 words or less)
+
+
+- Introduction (brief literature review, present the problem domain, identify
+  gap(s) that need to be addressed, and a research question- how will you address the gap)
+
+
+- Methods (source of data, methods for managing the data, data mining methods you used, with a justification for them)
+      - Source of data
+      -
+- Results (listing and evaluation of the results)
+- Discussion (position your work in the context of what has been done already,
+  and an honest assessment of the limitations of your approach)
+- Conclusion (overall impression of what you have done, and any work you
+  propose for the future).
