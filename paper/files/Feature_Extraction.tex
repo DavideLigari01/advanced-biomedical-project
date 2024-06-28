@@ -119,6 +119,11 @@ and permits the use of a broader range of features and models.
 
 \subsubsection{Extraction Interval Selection}  % Andrea
 \label{sec:extraction_interval}
-The choice of the extraction interval 
+The extraction interval refers to the duration of the audio segment from which the features are extracted.
+Its choice was conducted similarly to the sampling rate selection, considering only the fixed sample rate of 4000 Hz.
+However the interval also affects the number of samples available in each class, so it must be chosen carefully, 
+especially considering the limited number of samples available for some classes.
+The results showed that a 2-second interval yielded the best performance, however it also reduced the number of samples,
+impeding a correct training and evaluation of the models. As a consequence, we picked a 1-second interval as a compromise.
 
 \subsubsection{Number of Features per Type} % Davide
