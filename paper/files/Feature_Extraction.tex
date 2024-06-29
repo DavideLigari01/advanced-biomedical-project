@@ -68,12 +68,12 @@ The sampling rate of the data were heterogeneous, ranging from 4000 Hz to 44100 
 To assess the impact of the sampling rate on the classification performance, we trained different models on
 different features, extracted at different sampling rates and from various intervals. Each model is then 
 evaluated using different metrics, taking into account the class imbalance issue.
-We also consider a possible dependency between the sampling rate and the extraction interval, as shown 
+We also considered a possible dependency between the sampling rate and the extraction interval, as shown 
 in Algorithm \ref{alg:sr_choice}.
 
 \begin{algorithm}
     \small
-    \caption{Sampling rate choice}
+    \caption{Sampling rate and Interval choice}
     \label{alg:sr_choice}
     \begin{algorithmic}[1]
     \State \textbf{Input:}
@@ -120,10 +120,11 @@ and permits the use of a broader range of features and models.
 \subsubsection{Extraction Interval Selection}  % Andrea
 \label{sec:extraction_interval}
 The extraction interval refers to the duration of the audio segment from which the features are extracted.
-Its choice was conducted similarly to the sampling rate selection, considering only the fixed sample rate of 4000 Hz.
-However the interval also affects the number of samples available in each class, so it must be chosen carefully, 
-especially considering the limited number of samples available for some classes.
-The results showed that a 2-second interval yielded the best performance, however it also reduced the number of samples,
-impeding a correct training and evaluation of the models. As a consequence, we picked a 1-second interval as a compromise.
+Using algorithm \ref{alg:sr_choice}, we evaluated the performance of 0.5, 1, 2, and 3-second intervals
+on the classification task. It is important to note that the interval choice affects the number of samples 
+available for training and evaluation, so in case of a limited number of samples, this choice should no be based
+solely on the performance of the model. The results, showed that a 2-second interval yielded the best performance, 
+however it also reduced the number of samples, impeding a correct training and evaluation of the models. 
+As a consequence, we picked a 1-second interval as a compromise.
 
 \subsubsection{Number of Features per Type} % Davide

@@ -49,6 +49,44 @@
 
 \subsection{Models} % Davide
 
+\rowcolors{2}{blue!8}{blue!18}
+\begin{table}[h!]
+    \centering
+    \footnotesize
+    \begin{tabular}{|l|l|}
+        \hline
+        \textbf{Name}           & \textbf{Architecture (hidden layers)}                                 \\ \hline
+	   Random Forest                 & -                                                     \\ \hline
+        XGBoost                 & -                                                     \\ \hline
+        CatBoost                & -                                                     \\ \hline
+        LightGBM                & -                                                     \\ \hline
+        MLP\_Basic              & (128, 64, 32)                                         \\ \hline
+        MLP\_Ultra              & (512, 256, 128, 64, 32)                               \\ \hline
+        MLP\_Large              & (256, 128, 64, 32)                                    \\ \hline
+        MLP\_Small              & (64, 32)                                              \\ \hline
+        MLP\_Tiny               & (32, 16)                                              \\ \hline
+        MLP\_Reverse            & (32, 64, 128, 256, 512, 256, 128, 64, 32)             \\ \hline
+        MLP\_Bottleneck         & (512, 64, 32)                                         \\ \hline
+        MLP\_Rollercoaster      & (512, 128, 256, 128, 256, 64, 32)                     \\ \hline
+        MLP\_Hourglass          & (512, 256, 128, 64, 32, 64, 128, 256, 512)            \\ \hline
+        MLP\_Pyramid            & (1024, 512, 256, 128, 128, 128, 64, 32)               \\ \hline
+        MLP\_Wide               & (1024, 1024)                                          \\ \hline
+        MLP\_WideUltra          & (1024, 1024, 128, 32)                                 \\ \hline
+        MLP\_Sparse             & (32, 16, 8)                                           \\ \hline
+        MLP\_Dropout            & (128, 64, 32)                                         \\ \hline
+        MLP\_Ensemble1          & MLP\_Basic, Large, Ultra                    \\ \hline
+        MLP\_Ensemble2          & RandomForest, MLP\_Ultra                              \\ \hline
+        MLP\_Ensemble3          & MLP\_Rollercoaster, Large                        \\ \hline
+        MLP\_Ensemble4          & MLP\_Rollercoaster, Large, Ultra            \\ \hline
+        MLP\_Ensemble5          & RandomForest, MLP\_Ultra, Rollercoaster          \\ \hline
+        MLP\_Ensemble6          & MLP\_Rollercoaster, Large, Ultra, Wide \\ \hline
+        ALL\_Ensemble           & All models majority vote                              \\ \hline
+        CB\_ALL\_Ensemble       & All models CatBoost                                   \\ \hline
+    \end{tabular}
+    \caption{Models names and architectures.}
+    \label{tab:models}
+\end{table}
+
 \input{files/Metric_used.tex} % Davide
 
 \input{files/Prevention_Model_methods.tex} % Andrea
