@@ -1,1 +1,29 @@
+Certainly! Here’s an improved version with enhanced argumentation:
+
+---
+
 \subsubsection*{Support Model}
+
+In addition to the Prevention model, we developed a complementary model designed to assist clinicians in diagnosing heart diseases.
+This model aims to accurately classify all classes present in the dataset, avoiding any simplifications, to ensure comprehensive diagnostic support.\\
+Given the highly imbalanced nature of the dataset, where certain classes contain significantly fewer samples, traditional accuracy metrics can be misleading.
+To address this, we explored various balancing techniques, but they did not yield satisfactory results.
+Consequently, we prioritized metrics that provide equal importance to all classes, including the macro F1-score, balanced accuracy,
+and Matthews Correlation Coefficient (MCC). These metrics collectively offer a robust evaluation by accounting for class imbalance,
+ensuring that minority classes receive adequate consideration alongside majority classes.\\
+A particular emphasis was placed on the 'Normal' class, focusing on minimizing false positives. This is crucial for patient safety,
+as misclassifying abnormal heart sounds as normal could lead to missed diagnoses and delayed treatment.
+To address this concern, we introduced a 'Risk score' that quantifies the impact of normal false positives, allowing
+the model to be more sensitive to this critical aspect. This score was further adapted to evaluate individual diseases,
+enhancing our ability to assess the model's risk for each specific condition.\\
+The selection of the best model was guided by the macro F1-score and balanced accuracy.
+These metrics comprehensively reflect performance across all classes, ensuring that no disease category is overlooked.
+After identifying the optimal model, we employed explainability techniques to elucidate the model’s decision-making process.
+ This step is crucial because the model's outputs directly impact patient care; therefore, transparency and interpretability are essential. 
+ By providing clinicians with insights into how the model arrives at its conclusions, we enhance trust and facilitate informed clinical decisions.\\
+To achieve this, we computed feature importance using Permutation Feature Importance, which highlights the most influential factors driving the model's predictions.\\
+Additionally, we applied SHAP (SHapley Additive exPlanations) values to interpret the model's output at the individual prediction level.
+ SHAP values provide a detailed breakdown of each prediction, illustrating the impact of specific features on the model's decision. 
+ Based on the SHAP values, we identified the areas in the audio signal that significantly influenced the model's classification.\\
+By integrating these explainability techniques, we ensure that the model’s decision-making process is transparent and comprehensible. 
+This not only builds confidence among clinicians but also ensures that the model's outputs are actionable and reliable in a clinical setting.
