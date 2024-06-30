@@ -4,8 +4,7 @@ According to Figure \ref{fig:ROC_normVSrest_allmodels}, the MLP models outperfor
 indicated by the higher AUC values.
 Specifically, \textit{MLP\_Ensemble5} achieved the highest AUC value of 0.96, followed 
 by \textit{MLP\_Ultra}, \textit{MLP\_Rollercoaster}, \textit{MLP\_Ensemble2}, 
-and \textit{MLP\_Ensemble4}, all with an AUC of 0.95. \textit{MLP\_Ensemble5} also 
-had the highest MCC value in the multiclass classification task, confirming its superior performance.
+and \textit{MLP\_Ensemble4}, all with an AUC of 0.95.
 
 \begin{figure}[H]
     \centering
@@ -14,7 +13,7 @@ had the highest MCC value in the multiclass classification task, confirming its 
     \label{fig:ROC_normVSrest_allmodels}
 \end{figure}
 
-To further analyze model performance, we selected four FPR levels (1\%, 5\%, 10\%, 20\%) and 
+To further analyze model performance, we selected four significative FPR levels (1\%, 5\%, 10\%, 20\%) and 
 calculated the corresponding TPR. The consolidated results are shown in 
 Figure \ref{fig:normVSrest_all}.
 
@@ -38,8 +37,9 @@ different models to achieve optimal performance.
 \subsubsection{Best Model Analysis}
 %confmat of the models composing it vs confmat of the ensemble
 
-To further investigate the performance of the ensemble model, we compared the confusion matrices of
-the individual models with the ensemble one (Figure \ref{fig:confmat_ensemble_vs_individual}).
+To understand the performance of the ensemble model, we compared its confusion matrix against 
+the confusion matrices of the individual models that compose it
+(Figure \ref{fig:confmat_ensemble_vs_individual}).
 
 \begin{figure}[H]
     \centering
@@ -49,17 +49,16 @@ the individual models with the ensemble one (Figure \ref{fig:confmat_ensemble_vs
 \end{figure}
 
 \noindent
-In the confusion matrix the class 2 represents the normal heartbeats, the class 1 represents the 
-abnormal heartbeats, and the class 0 represents the artifacts. 
-We can see that the Random Forest and MLP\_Ultra are "complementary" models, with the former 
-having higher true positive rates for the normal class and the latter a smaller false positive rate.
-The ensemble model combines these strengths. The contribution of the MLP\_Rollercoaster model is
-less evident, but it was experimentally shown that it contributes to the ensemble's performance.
-The reason may be related to the fact that the some of the samples that are misclassified by the
-other models are correctly classified by the MLP\_Rollercoaster model.\newline
-Interestingly, the MLP\_Ultra model classifies less abnormal heartbeats as normal than the MLP\_Ensemble5 model.
-However this is due to the fact that this latter simply classifies less samples as normal. Indeed we could minimize the 
-FPR of the normal class just by classifying all the samples as abnormal, but this would result in a
-very low TPR for the normal class.This evidence the importance of analyzing FPR and TPR together.
-In conclusion, the ensemble model is the best model for the task of classifying normal heartbeats,
-abnormal heartbeats, and artifacts, in a FPR/TPR trade-off maximization scenario.
+In the confusion matrix, class 2 represents normal heartbeats, class 1 represents abnormal heartbeats, and 
+class 0 represents artifacts. The Random Forest and MLP\_Ultra models exhibit complementary strengths: the 
+Random Forest works better in recognizing normal samples, while the MLP\_Ultra model performs better in 
+identifying abnormal samples. The ensemble model effectively combines these strengths.\\\noindent
+The contribution of the MLP\_Rollercoaster model to the ensemble’s performance is less apparent but has been 
+experimentally demonstrated. This may be due to its ability to correctly classify some samples that are 
+misclassified by the other models.\\\noindent
+Notably, the MLP\_Ultra model classifies fewer abnormal heartbeats as normal compared to the MLP\_Ensemble5 
+model. However, this is because the MLP\_Ultra model simply classifies fewer samples as normal. Minimizing 
+the false positive rate (FPR) for the normal class by classifying all samples as abnormal would result in a very 
+low true positive rate (TPR) for the normal class. This highlights the importance of analyzing FPR and TPR together.\\\noindent
+In conclusion, the ensemble model is the most effective for classifying normal heartbeats, abnormal heartbeats, 
+and artifacts, achieving an optimal trade-off between FPR and TPR.
