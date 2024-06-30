@@ -1,27 +1,21 @@
 \subsection{Source of Data}
-The dataset for this project was obtained from a Kaggle repository titled \textit{Dangerous Heartbeat Dataset (DHD)} \cite{Dangerous-Heartbeat-Dataset-DHD}, 
-which in turn sources its data from the PASCAL Classifying Heart Sounds Challenge 2011 (CHSC2011) \cite{pascal-chsc-2011}. 
+The dataset for this project was obtained from a Kaggle repository titled \textit{Dangerous Heartbeat Dataset (DHD)} \cite{Dangerous-Heartbeat-Dataset-DHD},
+which in turn sources its data from the PASCAL Classifying Heart Sounds Challenge 2011 (CHSC2011) \cite{pascal-chsc-2011}.
 This dataset comprises audio recordings of heartbeats, categorized into different types of heart sounds.
 Specifically, the dataset consists of 5 types of recordings: Normal Heart Sounds, Murmur Sounds, Extra Heart Sounds, Extrasystole Sounds, and Artifacts.
 Data has been gathered from the general public via the iStethoscope Pro iPhone app and from a clinic trial in hospitals using the digital stethoscope DigiScope.
 
 \subsubsection*{Type of Sources} %Davide
 The dataset comprises audio recordings collected from three distinct sources:
-
-\vspace{0.2cm}\noindent
-\textbf{Type A:}
-This subset includes recordings contributed by the general public through the iStethoscope Pro iPhone app. 
+\paragraph{Type A:}
+This subset includes recordings contributed by the general public through the iStethoscope Pro iPhone app.
 Users from diverse backgrounds and locations have submitted these recordings, providing a wide range of heart sounds in various conditions.
-
-\vspace{0.2cm}\noindent
-\textbf{Type B:}  
-This subset consists of recordings obtained from clinical trials conducted in hospitals using the DigiScope digital stethoscope. 
+\paragraph{Type B:}
+This subset consists of recordings obtained from clinical trials conducted in hospitals using the DigiScope digital stethoscope.
 These recordings are collected in controlled environments, contributing to a high-quality dataset for clinical applications.
-
-\vspace{0.2cm}\noindent
-\textbf{Type C:}
-This subset is a mixed collection that includes recordings from both the iStethoscope Pro app and the DigiScope digital stethoscope. 
-Additionally, this subset incorporates heart sound recordings sourced from various publicly available datasets on the internet. 
+\paragraph{Type C:}
+This subset is a mixed collection that includes recordings from both the iStethoscope Pro app and the DigiScope digital stethoscope.
+Additionally, this subset incorporates heart sound recordings sourced from various publicly available datasets on the internet.
 This mixed dataset is valuable for its diversity and comprehensiveness, covering a broad spectrum of heart sound variations and abnormalities.
 
 \noindent
@@ -134,14 +128,19 @@ indicating unexpected contractions of the heart muscle (systoles) occurring outs
 \end{figure}
 
 \subsubsection*{Data Distribution} % Davide
-Figure \ref{fig:DataExp_num_durations}, show the presence of highly imbalanced classes in the dataset.
-This poses a challenge for the classification task as the model may not have enough samples to learn from,
-especially for the 'Extrastole' and 'Extrahls' classes. This problem is tackled trying to augment the data available,
-both by segmenting the audio files and by using data augmentation techniques. Furthermore, 
-we test the effectiveness of oversampling and undersampling techniques on the model performance.
-The data is split intro training and testing sets, with a 80\% - 20\% ratio, respectively. The validation set
-is omitted, due to the low number of samples available.
-
+Figure \ref{fig:DataExp_num_durations}, illustrates the significant class imbalance present in the dataset, particularly for the 'Extrastole' and 'Extrahls' classes,
+which have far fewer samples compared to other classes.
+This imbalance poses a challenge for the classification task,
+as the model may struggle to learn and accurately predict the underrepresented classes due to the insufficient number of training examples.
+To mitigate this issue, several strategies are employed.\\
+Data augmentation techniques are applied to artificially increase the size of the dataset
+by creating modified versions of the existing audio files through methods such as pitch shifting, time stretching, and adding noise.
+Additionally, the original audio recordings are segmented into smaller clips, which not only increases the number of samples available for training but
+also provides the model with more varied examples of heart sounds, enhancing its ability to generalize across different heart sound variations.\\
+Furthermore, the effectiveness of oversampling and undersampling techniques is tested. Oversampling involves duplicating samples from the minority classes
+to increase their representation in the training set, while undersampling involves reducing the number of samples from the majority classes
+to balance the dataset. The data is split into training and testing sets with an 80\% - 20\% ratio, respectively.\\
+A validation set is omitted due to the low number of samples available, ensuring that the maximum amount of data is used for training and testing the model.
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\columnwidth]{./images/DataExp_num_durations.png}
