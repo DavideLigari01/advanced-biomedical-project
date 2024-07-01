@@ -1,137 +1,55 @@
 \subsubsection*{Metrics}
 
-In this project, several metrics are used to evaluate the performance of the heartbeat audio classification model.
-These metrics provide insights into various aspects of model performance,
-particularly in the context of multiclass classification with highly imbalanced classes.
+In this project, various metrics evaluate the heartbeat audio classification model, focusing on multiclass classification with imbalanced classes.
 
 \paragraph{Accuracy}
-The first metric considered is \textit{accuracy}, which is defined as the ratio of the number
-of correct predictions to the total number of predictions. Mathematically, it is expressed as:
+Accuracy measures the ratio of correct predictions to the total number of predictions:
 \[
-    \text{Accuracy} = \frac{\text{Number of Correct Predictions}}{\text{Total Number of Predictions}}
+    \text{Accuracy} = \frac{\text{Correct Predictions}}{\text{Total Predictions}}
 \]
-Accuracy provides a straightforward measure of overall model performance and is easy to understand and compute.
-However, in the presence of class imbalance, accuracy can be misleading because it does not account for the distribution of different classes,
-potentially giving a false sense of high performance when the model is biased towards the majority class.
+It is straightforward but can be misleading with imbalanced classes.
 
 \paragraph{Balanced Accuracy}
-Balanced accuracy tries to address the limitations of accuracy in the case of imbalanced classes.
-It is the average of recall obtained on each class. It is calculated as:
+Balanced accuracy addresses class imbalance by averaging recall across classes:
 \[
     \text{Balanced Accuracy} = \frac{1}{N} \sum_{i=1}^{N} \frac{TP_i}{TP_i + FN_i}
 \]
-where \(N\) is the number of classes, \(TP_i\) is the true positives for class \(i\), and \(FN_i\)
-is the false negatives for class \(i\). Balanced accuracy handles class imbalance better by giving equal weight to each class,
-providing a more nuanced measure of performance across all classes.
+where \(N\) is the number of classes, \(TP_i\) is true positives, and \(FN_i\) is false negatives for class \(i\).
 
 \paragraph{Matthews Correlation Coefficient (MCC)}
-
-The Matthews Correlation Coefficient (MCC) is a robust metric used to evaluate the performance of classification models,
-especially useful in the presence of imbalanced classes. For multiclass classification problems, the MCC provides a balanced measure that takes
-into account the correct and incorrect predictions across all classes. The MCC for multiclass problems is calculated as:
-
+MCC evaluates performance by considering all classes:
 
 \[
     \text{MCC} = \frac{\sum_k \sum_l \sum_m C_{kk} C_{lm} - C_{kl} C_{mk}}{\sqrt{\sum_k \left( \sum_l C_{kl} \right) \left( \sum_{k' \ne k} \sum_{l'} C_{k'l'} \right)} \sqrt{\sum_k \left( \sum_l C_{lk} \right) \left( \sum_{k' \ne k} \sum_{l'} C_{l'k'} \right)}}
 \]
-
-
-This formula can be more easily understood by defining intermediate variables:
-
-\begin{itemize}
-    \item $t_k = \sum_i C_{ik}$: the number of times class $k$ truly occurred,
-    \item $p_k = \sum_i C_{ki}$: the number of times class $k$ was predicted,
-    \item $c = \sum_k C_{kk}$: the total number of samples correctly predicted,
-    \item $s = \sum_i \sum_j C_{ij}$: the total number of samples.
-\end{itemize}
-\noindent
-This allows the formula to be expressed as:
-
-\[
-    \text{MCC} = \frac{cs - \vec{t} \cdot \vec{p}}{\sqrt{s^2 - \vec{p} \cdot \vec{p}} \sqrt{s^2 - \vec{t} \cdot \vec{t}}}
-\]
-
-\noindent
-The MCC ranges from -1 to 1:
-\begin{itemize}
-    \item An MCC of 1 indicates perfect prediction, where the model correctly identifies all instances across all classes.
-    \item An MCC of 0 indicates no better performance than random chance.
-    \item An MCC of -1 indicates total disagreement between predictions and actual outcomes.
-\end{itemize}
-\noindent
-The multiclass MCC is especially valuable because it considers the distribution of errors across all classes, providing a more comprehensive
-and balanced measure of performance than simpler metrics like accuracy, which can be misleading in imbalanced datasets.
-By taking into account the correct and incorrect predictions for each class, the MCC ensures that performance is evaluated equitably across all classes,
-making it a reliable indicator of overall model quality in multiclass classification tasks.
+This comprehensive metric accounts for true and false predictions, making it robust for imbalanced datasets.
 
 \paragraph{Precision and Recall}
-
-Precision and recall are fundamental metrics used to evaluate the performance of classification models,
-particularly in scenarios with imbalanced class distributions.
-They provide insights into different aspects of how well a model distinguishes between classes.
-Precision measures the accuracy of positive predictions. It is calculated as:
+Precision measures the accuracy of positive predictions:
 \[
     \text{Precision} = \frac{TP}{TP + FP}
 \]
-where \( TP \) (True Positives) is the number of correctly predicted positive instances,
-and \( FP \) (False Positives) is the number of incorrectly predicted positive instances.
-Precision answers the question: `Out of all instances predicted as positive, how many are actually positive'
-A high precision indicates that when the model predicts a positive result, it is likely to be correct.
-
-Recall, also known as sensitivity or true positive rate, measures the proportion of actual positives that are correctly identified by the model.
-It is calculated as:
+Recall measures the proportion of actual positives correctly identified:
 \[
     \text{Recall} = \frac{TP}{TP + FN}
 \]
-where \( FN \) (False Negatives) is the number of incorrectly predicted negative instances.
-Recall answers the question: `Out of all actual positive instances, how many did the model correctly predict as positive'
-A high recall indicates that the model is effectively capturing all positive instances, minimizing false negatives.\\
-In the context of imbalanced datasets, where one class may significantly outnumber another, both precision and recall become important.\\
-The micro variant aggregates these metrics across all classes, providing an overall measure that considers the total number of true positives,
-false positives, and false negatives across the entire dataset.\\
-Conversely, the macro variant computes precision and recall for each class independently and then averages them.
-This method is valuable for understanding the performance of the model on individual classes, particularly when class distribution varies significantly.
-It ensures that the evaluation does not disproportionately favor the majority class, thereby providing a balanced view of model performance across all classes.\\
+Micro variants aggregate these metrics across all classes, while macro variants average them per class, 
+offering insights into individual class performance.
 
 \paragraph{F1 Score}
-The F1 score is a metric that combines both precision and recall into a single value, offering a balanced assessment of a model's performance. It is defined as:
+The F1 score balances precision and recall:
 \[
     \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
 \]
-Precision measures the accuracy of positive predictions, while recall measures the coverage of actual positives by the model.
-The F1 score effectively balances these two metrics, making it particularly useful in scenarios where both precision and recall are equally important.\\
-The F1 score can be computed in two ways: \textit{micro} and \textit{macro}.
-The micro F1 score aggregates the contributions of all classes to compute a single F1 score.
-On the other hand, the macro F1 score computes the F1 score for each class independently and then averages these scores.
-This approach is crucial in the context of
-class imbalance because it ensures that the performance on minority classes receives equal weight and is not overshadowed by the majority class.
+Micro and macro variants provide overall and class-specific performance evaluations, respectively.
 
-\paragraph{Receiver Operating Characteristic (ROC) Curve and Area Under the Curve (AUC)}
-For binary classification scenarios, the \textit{ROC curve} and the \textit{AUC} (Area Under the Curve) are used.
-The ROC curve is a plot of the true positive rate (recall) against the false positive rate, showing the trade-off between sensitivity and specificity.
-The AUC provides a single value summarizing the overall ability of the model to discriminate between positive and negative classes,
-with a higher AUC indicating better performance. These metrics are particularly useful for binary classification tasks,
-providing a visual and quantitative assessment of model performance.
+\paragraph{ROC Curve and AUC}
+For binary classification, the ROC curve plots true positive rate against false positive rate, and AUC summarizes the model's discriminatory ability,
+ with higher AUC indicating better performance.
 
 \paragraph{Risk Score}
-
-The risk score is a custom metric designed to evaluate the model's performance in predicting heart diseases,
-particularly focusing on avoiding the misclassification of heart disease patients as normal.
-Misclassifying heart disease as normal can lead to incorrect diagnoses and inadequate treatment, posing serious health risks. \\
-The metric measures the proportion of heart disease patients misclassified as normal.\\
-It is intended to increase with the number of false positives (cases of heart disease classified as normal)
-and also as the number of samples predicted as normal decreases.
-A lower risk score indicates better model performance in minimizing the misclassification of heart disease as normal.
-The risk score is calculated using the formula:
+The risk score evaluates the model's ability to avoid misclassifying heart disease as normal:
 \[
     \text{Risk score} = \frac{FP}{FP + TP}
 \]
-where \(FP\) (False Positives) is the number of heart disease samples misclassified as normal, and \(TP\) (True Positives)
- is the number of normal samples correctly classified.
-
-Additionally, the risk score can be defined for each specific heart disease to provide a more detailed understanding 
-of the model's performance for different types of heart conditions. The disease-specific risk score is calculated as:
-\[
-    \text{Risk score}_i = \frac{FP_i}{FP + TP}
-\]
-where \(FP_i\) is the number of samples of heart disease \(i\) misclassified as normal, and \(FP + TP\) is the total number of samples classified as normal.
+A lower risk score indicates better performance. Disease-specific risk scores can provide detailed insights into different heart conditions.
