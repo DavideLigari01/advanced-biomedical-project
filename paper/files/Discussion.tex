@@ -1,4 +1,18 @@
 \section{Discussion}
-\subsection{Positioning in Existing Research}
+\paragraph{Summary of Key Findings}
+The primary aim of this study was to evaluate various machine learning models for the prediction of heart disease. The results demonstrate that the MLP\_Ensemble5 model outperformed other models, achieving the highest AUC value of 0.96. Additionally, the MLP\_Ensemble5 model maintained superior performance across different FPR levels, further emphasizing its robustness. These findings align with the initial research hypothesis that ensemble models, which leverage the strengths of multiple individual models, can enhance predictive performance in medical diagnostics.
 
-\subsection{Limitations}
+\paragraph{Contextualization with Existing Research}
+The results obtained in this study contribute to the growing body of literature supporting the efficacy of ensemble learning techniques in medical diagnostics. Previous research has highlighted the advantages of ensemble methods in improving predictive accuracy and robustness. The superior performance of the MLP\_Ensemble5 model, as evidenced by its higher AUC and TPR values, corroborates these findings and suggests that such models can be effectively applied to heart disease prediction.
+
+\paragraph{Unexpected Results}
+One of the unexpected findings was the relatively lower contribution of the MLP\_Rollercoaster model to the ensemble’s overall performance. This was surprising given its experimental validation in other contexts. The exact reasons for this discrepancy are unclear, but it may be due to the specific characteristics of the dataset used in this study or the interaction effects between different models in the ensemble. Further investigation is needed to understand the role of MLP\_Rollercoaster and similar models in ensemble frameworks.
+
+\paragraph{Limitations}
+There are several limitations to this study that must be acknowledged. First, the dataset used may not be representative of the general population, potentially limiting the generalizability of the findings. Second, the models were evaluated based on their performance on a single dataset, which may not capture the variability and complexity present in real-world scenarios. Additionally, while the ensemble approach demonstrated high performance, it also increases computational complexity and resource requirements, which may pose challenges for implementation in resource-limited settings.
+
+\paragraph{Recommendations for Future Research}
+Future research should aim to address the limitations identified in this study. Expanding the dataset to include more diverse populations and evaluating the models on multiple datasets can enhance the generalizability of the findings. Moreover, exploring methods to optimize the computational efficiency of ensemble models will be crucial for their practical implementation. Investigating the underlying reasons for the varying contributions of individual models within an ensemble can also provide valuable insights for model improvement.
+
+\paragraph{Conclusion}
+In conclusion, this study highlights the potential of ensemble learning techniques in enhancing the predictive accuracy of heart disease diagnostics. The MLP\_Ensemble5 model, in particular, demonstrated superior performance across various metrics, reinforcing the value of integrating multiple models to leverage their individual strengths. Despite the limitations, the findings provide a promising direction for future research and practical applications in medical diagnostics, emphasizing the need for further exploration and optimization of ensemble approaches.
