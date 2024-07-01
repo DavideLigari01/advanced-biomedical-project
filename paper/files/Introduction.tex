@@ -1,17 +1,21 @@
+\vfill
 \section{Introduction}
-\firstword{H}{eart} disease remains a leading cause of mortality worldwide, making early diagnosis critical for effective treatment and management. Traditional diagnostic methods are often invasive and expensive. Recent advancements in machine learning offer non-invasive alternatives using heart sound recordings. This paper explores the application of machine learning and network analysis to predict heart disease from heartbeat audio signals. The study addresses the challenges of data imbalance and noise in recordings by employing advanced data preprocessing techniques and robust machine learning models.
+\firstword{H}{eart} diseases are the leading cause of death worldwide, accounting for 18.5 million deaths in 2019, as reported
+by Max Roser in World In Data \citeyear{owid-causes-of-death-treemap} \cite{owid-causes-of-death-treemap}.
+This highlights the urgent need for early detection to prevent fatalities. Traditional diagnostic methods often fall short,
+diagnosing heart conditions at advanced stages when treatment options are limited. Therefore, developing an automated system for early detection is crucial.\\
+Recent advancements in machine learning and deep learning have shown promise in healthcare applications, including heart disease detection.
+These technologies can offer accurate and early diagnosis, potentially improving patient outcomes. However, current models have limitations.
+For instance, simple models like SVM, used by Zhang et al. \cite{Zhang_Han_Deng_2017} and Deng et al. \cite{Deng_Han_2016}, have low precision,
+unsuitable for medical applications. Moreover, research by Alafif et al. \cite{Alafif_Boulares_Barnawi_Alafif_Althobaiti_Alferaidi_2020}
+and Noman et al. \cite{Noman_Ting_Salleh_Ombao_2019} focuses on identifying whether a heartbeat is normal or abnormal without specifying the
+type of disease or the location of the abnormality in the recording. Additionally, Chen et al.'s \cite{Chen_Ren_Hao_Hu_2018} model, despite its high accuracy of 0.93,
+is too complex for practical usage and distinguishes only a few types of heart diseases, which is inadequate for comprehensive medical applications.\\
+To address these limitations, we propose a model that effectively identifies various heart diseases, including cases where no heart disease is present,
+while balancing model complexity with result accuracy. Considering the importance of early anomaly detection in heartbeats, we also propose a lightweight
+model capable of detecting anomalies in heartbeat recordings. This approach allows individuals to use their smartphones to record their heartbeats and check for anomalies,
+facilitating timely consultation with a doctor for further diagnosis.
 
-The dataset for this project, sourced from the PASCAL Classifying Heart Sounds Challenge 2011 (CHSC2011) and available on Kaggle, includes audio recordings of five types of heart sounds: Normal, Murmur, Extra Heart, Extrasystole, and Artifacts. The data was gathered from the general public via the iStethoscope Pro iPhone app and from clinical trials using the DigiScope digital stethoscope.
-
-Preprocessing techniques such as noise reduction, resampling, and segmentation were applied to ensure data quality. Features were extracted using methods like Mel-Frequency Cepstral Coefficients (MFCC), Chroma, Root Mean Square (RMS), Zero-Crossing Rate (ZCR), and other spectral features. Various machine learning models, including LightGBM, XGBoost, CatBoost, Random Forest, and Multilayer Perceptron, were trained and evaluated. The best-performing model achieved high accuracy in distinguishing between different heart sound categories.
-
-This research demonstrates the potential of machine learning in cardiac diagnostics and provides a foundation for future advancements in the field. By leveraging advanced techniques and comprehensive preprocessing, this study aims to enhance the accuracy of heart disease prediction, contributing to improved cardiovascular health outcomes.
-
-\subsection{Problem Domain}
-
-\subsection{Research Question}
-
-\subsection{Previous Research}
 
 \rowcolors{2}{blue!8}{blue!18}
 
