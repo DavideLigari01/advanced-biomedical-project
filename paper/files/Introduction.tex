@@ -1,13 +1,11 @@
 \section{Introduction}
-\firstword{H}{eart} disease remains a leading cause of mortality worldwide.
-Early diagnosis is critical for effective treatment and management.
-Traditional methods of diagnosis often involve invasive procedures and expensive equipment.
-Recent advancements in machine learning have opened new avenues for non-invasive diagnosis using heart sound recordings.
-This paper explores the use of machine learning and network analysis to predict heart disease from heart beat audio signals.
-Despite significant progress, gaps remain in accurately classifying heart sounds due to data imbalance and the presence of noise in recordings.
-This study aims to address these gaps by employing advanced data preprocessing techniques and robust machine learning models.
-The research question guiding this study is: How can machine learning models be optimized to improve the accuracy of heart disease prediction
-from heart sound recordings?
+\firstword{H}{eart} disease remains a leading cause of mortality worldwide, making early diagnosis critical for effective treatment and management. Traditional diagnostic methods are often invasive and expensive. Recent advancements in machine learning offer non-invasive alternatives using heart sound recordings. This paper explores the application of machine learning and network analysis to predict heart disease from heartbeat audio signals. The study addresses the challenges of data imbalance and noise in recordings by employing advanced data preprocessing techniques and robust machine learning models.
+
+The dataset for this project, sourced from the PASCAL Classifying Heart Sounds Challenge 2011 (CHSC2011) and available on Kaggle, includes audio recordings of five types of heart sounds: Normal, Murmur, Extra Heart, Extrasystole, and Artifacts. The data was gathered from the general public via the iStethoscope Pro iPhone app and from clinical trials using the DigiScope digital stethoscope.
+
+Preprocessing techniques such as noise reduction, resampling, and segmentation were applied to ensure data quality. Features were extracted using methods like Mel-Frequency Cepstral Coefficients (MFCC), Chroma, Root Mean Square (RMS), Zero-Crossing Rate (ZCR), and other spectral features. Various machine learning models, including LightGBM, XGBoost, CatBoost, Random Forest, and Multilayer Perceptron, were trained and evaluated. The best-performing model achieved high accuracy in distinguishing between different heart sound categories.
+
+This research demonstrates the potential of machine learning in cardiac diagnostics and provides a foundation for future advancements in the field. By leveraging advanced techniques and comprehensive preprocessing, this study aims to enhance the accuracy of heart disease prediction, contributing to improved cardiovascular health outcomes.
 
 \subsection{Problem Domain}
 
@@ -15,19 +13,21 @@ from heart sound recordings?
 
 \subsection{Previous Research}
 
+\rowcolors{2}{blue!8}{blue!18}
+
 \begin{table*}[ht!]
     \small
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
-    \hline
-    \textbf{Authors} & \textbf{Models} & \textbf{Features} & \textbf{Results} & \textbf{Anno} & \textbf{Dataset} \\ \hline
-    W. Zhang et al \cite{Zhang_Han_Deng_2017} & SVM & Spectrogram & 0.76 Precision & 2017 & N, M, EH, AR \\ \hline
-    SW. Deng et al \cite{Deng_Han_2016} & SVM & DWT & 0.76 Precision & 2016 & N, M, EH, AR \\ \hline
-    A. Raza et al \cite{Raza_Mehmood_Ullah_Ahmad_Choi_On_2019} & LSTM & 1D time series & 0.80 Accuracy & 2019 & N, M, ES \\ \hline
-    T. Alafif et al \cite{Alafif_Boulares_Barnawi_Alafif_Althobaiti_Alferaidi_2020} & 2D-CNN + transfer learning & MFCC & 0.89 Accuracy & 2020 & N, A \\ \hline
-    Noman et al \cite{Noman_Ting_Salleh_Ombao_2019} & Ensemble CNN & 1D time series + MFCC & 0.89 Accuracy & 2019 & N, A \\ \hline
-    Chen et al \cite{Chen_Ren_Hao_Hu_2018} & 2D CNN & WT + Hilbert-Huang & 0.93 Accuracy & 2018 & N, M, ES \\ \hline
-    Our Model & Ensemble Model (MLPs + RF) & MFCC + Chroma + ZCR & 0.88 Accuracy & 2024 & AR, M, N, EH, ES \\ \hline
+        \hline
+        \textbf{Authors}                                                                & \textbf{Models}            & \textbf{Features}     & \textbf{Results} & \textbf{Anno} & \textbf{Dataset} \\ \hline
+        W. Zhang et al \cite{Zhang_Han_Deng_2017}                                       & SVM                        & Spectrogram           & 0.76 Precision   & 2017          & N, M, EH, AR     \\ \hline
+        SW. Deng et al \cite{Deng_Han_2016}                                             & SVM                        & DWT                   & 0.76 Precision   & 2016          & N, M, EH, AR     \\ \hline
+        A. Raza et al \cite{Raza_Mehmood_Ullah_Ahmad_Choi_On_2019}                      & LSTM                       & 1D time series        & 0.80 Accuracy    & 2019          & N, M, ES         \\ \hline
+        T. Alafif et al \cite{Alafif_Boulares_Barnawi_Alafif_Althobaiti_Alferaidi_2020} & 2D-CNN + transfer learning & MFCC                  & 0.89 Accuracy    & 2020          & N, A             \\ \hline
+        Noman et al \cite{Noman_Ting_Salleh_Ombao_2019}                                 & Ensemble CNN               & 1D time series + MFCC & 0.89 Accuracy    & 2019          & N, A             \\ \hline
+        Chen et al \cite{Chen_Ren_Hao_Hu_2018}                                          & 2D CNN                     & WT + Hilbert-Huang    & 0.93 Accuracy    & 2018          & N, M, ES         \\ \hline
+        Our Model                                                                       & Ensemble Model (MLPs + RF) & MFCC + Chroma + ZCR   & 0.88 Accuracy    & 2024          & AR, M, N, EH, ES \\ \hline
     \end{tabular}
-    \caption{Comparison of different models for classification}
+    \caption{Comparison of different models for classification. \textbf{Legend:} N: Normal, M: Murmur, EH: Extra Heartbeat, AR: Artifact, ES: Extra systoles, A: Abnormal}
 \end{table*}
