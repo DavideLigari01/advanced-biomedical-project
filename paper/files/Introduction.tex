@@ -14,3 +14,20 @@ from heart sound recordings?
 \subsection{Research Question}
 
 \subsection{Previous Research}
+
+\begin{table*}[ht!]
+    \small
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+    \hline
+    \textbf{Authors} & \textbf{Models} & \textbf{Features} & \textbf{Results} & \textbf{Anno} & \textbf{Dataset} \\ \hline
+    W. Zhang et al \cite{Zhang_Han_Deng_2017} & SVM & Spectrogram & 0.76 Precision & 2017 & N, M, EH, AR \\ \hline
+    SW. Deng et al \cite{Deng_Han_2016} & SVM & DWT & 0.76 Precision & 2016 & N, M, EH, AR \\ \hline
+    A. Raza et al \cite{Raza_Mehmood_Ullah_Ahmad_Choi_On_2019} & LSTM & 1D time series & 0.80 Accuracy & 2019 & N, M, ES \\ \hline
+    T. Alafif et al \cite{Alafif_Boulares_Barnawi_Alafif_Althobaiti_Alferaidi_2020} & 2D-CNN + transfer learning & MFCC & 0.89 Accuracy & 2020 & N, A \\ \hline
+    Noman et al \cite{Noman_Ting_Salleh_Ombao_2019} & Ensemble CNN & 1D time series + MFCC & 0.89 Accuracy & 2019 & N, A \\ \hline
+    Chen et al \cite{Chen_Ren_Hao_Hu_2018} & 2D CNN & WT + Hilbert-Huang & 0.93 Accuracy & 2018 & N, M, ES \\ \hline
+    Our Model & Ensemble Model (MLPs + RF) & MFCC + Chroma + ZCR & 0.88 Accuracy & 2024 & AR, M, N, EH, ES \\ \hline
+    \end{tabular}
+    \caption{Comparison of different models for classification}
+\end{table*}
