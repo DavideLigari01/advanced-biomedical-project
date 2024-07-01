@@ -8,56 +8,71 @@ Notably, the MLP\_Ensemble2 model exhibits the highest performance, with a macro
 This suggests that ensemble models effectively leverage the strengths of individual models to achieve optimal performance.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\columnwidth]{../images/support_models_metrics.png}
+    \includegraphics[width=.9\columnwidth]{../images/support_models_metrics.png}
     \caption{Metrics of the Support Models, computed on the test set}
     \label{fig:support_models_metrics}
 \end{figure}
 \noindent
 The risk of misclassifying an abnormal sample as normal is depicted in Figure \ref{fig:support_models_risk_scores},
- which shows the overall risk scores (in blue) for each model. The graph also displays specific risk scores associated with each class,
- representing the probability of predicting a sample of that class as normal.\\
+which shows the overall risk scores (in blue) for each model. The graph also displays specific risk scores associated with each class,
+representing the probability of predicting a sample of that class as normal.\\
 This stacked bar chart helps compare the height of the different colors rather than their areas.
- From the figure, it's clear that no single model consistently outperforms others across all scores,but the performance varies across the scores. 
- For instance, MLP\_Rollercoaster has the best overall risk score (blue) and excels in murmurs risk score (red), 
- while MLP\_Ensemble3 performs best for extra systoles risk (orange).
+From the figure, it's clear that no single model consistently outperforms others across all scores,but the performance varies across the scores.
+For instance, MLP\_Rollercoaster has the best overall risk score (blue) and excels in murmurs risk score (red),
+while MLP\_Ensemble3 performs best for extra systoles risk (orange).
 
-\begin{figure*}[t]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{../images/support_models_risk_scores.png}
+    \includegraphics[width=\columnwidth]{../images/support_models_risk_scores.png}
     \caption{Risk Scores of the Support Models}
     \label{fig:support_models_risk_scores}
-\end{figure*}
+\end{figure}
 
 \subsubsection*{Best Model}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\columnwidth]{../images/MLP_Ensamble2.png}
-    \caption{Architecture of the best Support Model}
-    \label{fig:MLP_Ensamble2}
-\end{figure}
+The MLP\_Ensemble2 model stands out as the best-performing model among the support models. 
+To thoroughly understand its performance, we computed the confusion matrix on the test set, which is depicted in Figure \ref{fig:support_models_conf_matrix}. 
+The confusion matrix reveals that the model excels in recognizing artifacts (class 0) and extra systoles (class 1).
+ However, it tends to confuse murmurs (class 2) and extra systoles (class 4) with normal heartbeats (class 3).
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../images/support_models_conf_matrix.png}
-    \caption{Confusion Matrix of the best Support Model}
+    \caption{Confusion Matrix of the MLP\_Ensemble2 model. Columns represent the true classes, while rows represent the predicted classes. Class 0: Artifacts, Class 1: Extra heartbeats, Class 2: Murmurs, Class 3: Normal, Class 4: Extra systoles.}
     \label{fig:support_models_conf_matrix}
 \end{figure}
-
-\begin{figure*}[htpb]
+\noindent
+To further investigate this anomaly, we analyzed the mean values of the features within each class, as shown in Figure \ref{fig:mean_val_for_features}. 
+The mean values represent the centroids of the classes in the feature space, providing insights into the distribution of the classes.
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{../images/mean_val_for_features.png}
+    \includegraphics[width=\columnwidth]{../images/mean_val_for_features.png}
     \caption{Mean values for each feature within each class}
     \label{fig:mean_val_for_features}
-\end{figure*}
+\end{figure}
+\noindent
+The analysis indicates that artifacts and extra heartbeats have distinctly different mean values compared to other classes, while murmurs, extra systoles, 
+and normal heartbeats exhibit similar mean values. To visualize this better, we employed T-SNE to map the features into a 2D space, as shown in Figure \ref{fig:t_sne_visualization}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=.9\columnwidth]{../images/t-sne_feature_visualization.png}
+    \caption{T-SNE visualization of the features}
+    \label{fig:t_sne_visualization}
+\end{figure}
+\noindent
+The T-SNE visualization confirms the clear separation between artifacts and extra heartbeats from the other classes, while murmurs, extra systoles,
+ and normal heartbeats are overlapped. This suggests that the features employed are not sufficiently distinct to differentiate normal heartbeats 
+ from murmurs and extra systoles, explaining the model's tendency to confuse these classes.
+
 
 \subsubsection*{Explainability}
 
-\begin{figure*}[htpb]
+\begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{../images/permutation_feature_importance.png}
+    \includegraphics[width=.8\columnwidth]{../images/permutation_feature_importance.png}
     \caption{Feature Importance computed with Permutation Importance}
     \label{fig:permutation_feature_importance}
-\end{figure*}
+\end{figure}
 
 
 \begin{figure}[H]
