@@ -1,46 +1,38 @@
 \section{Discussion}
 
-We developed two ensemble models, MLP\_Ensemble5 and MLP\_Ensemble2, to address the two folded 
-purpose of assessing prevention and diagnosis (support model) of heart disease. In the former, we focused 
-on the minimization of false negatives, while in the latter, we aimed to maximize the 
-overall predictive performance, to then add explainability to the model.
-In both cases we tried several models and features, taking care of correlation aspects, 
-to find the best results. We used the PASCAL challenge dataset, handling the class imbalance
-problem aggregating diseases in one case and using proper metrics in the other.
-We added explainability to the support model, to provide insights to the medical staff.
-
-Several studies have been conducted on the prediction of heart disease using machine learning. 
-Zhang et al. \cite{Zhang_Han_Deng_2017} used a Support Vector Machine (SVM) model with spectrogram features to achieve a precision of 0.76,
-while Deng et al. \cite{Deng_Han_2016} used SVM with Discrete Wavelet Transform (DWT) features to achieve a similar precision. In both
-cases they used a model which is not computationally intensive, but with a limited performance.
-Some advancements have been made using deep learning models, such as the Long Short-Term Memory (LSTM) model used by Raza et al. \cite{Raza_Mehmood_Ullah_Ahmad_Choi_On_2019}
-with 1D time series features, achieving an accuracy of 0.80 with Normal, Murmur and Extrasystole classes.
-A significant improvement in the accuracy was achieved using CNNs by Alafif et al. \cite{Alafif_Boulares_Barnawi_Alafif_Althobaiti_Alferaidi_2020} and Noman et al. \cite{Noman_Ting_Salleh_Ombao_2019},
-however they only considered Normal and Abnormal classes, and the computational cost is higher. 
-A more disease specific approach was taken by Chen et al. \cite{Chen_Ren_Hao_Hu_2018}, who used a 2D CNN model with Wavelet Transform and Hilbert-Huang features, achieving an accuracy of 0.93 with Normal, Murmur and Extrasystole classes.
-This result may be investigated to improve the performance of our support model, which showed 
-a weakness in distinguishing between Murmur, Normal and Extrasystole classes. 
-In general a direct comparison is not possible, as in many cases the dataset used in the researches is different from ours, and the classes are not the same, with 
-our model being the only one considering 5 classes.
-A further thing to consider is the metric used to evaluate the performance. Indeed when dealing 
-with imbalanced datasets, the accuracy is not a good metric, as it may be misleading.
-In conclusion this research contributes to the literature by providing 
-two models. The first one, MLP\_Ensemble5, was optimized to minimize false normals while keeping
-a reduced computational cost and caring about distinguishing not only the presence or not of a disease but also
-whether the recorded signal is artifact or not. The second one, MLP\_Ensemble2, was optimized to maximize the overall performance,
-and introduced explainability measures to provide insights to the medical staff.
-The projects also suffered from some limitations. Two are realated to the limited size of the dataset. 
-The first one is the unability to create a validation set, thus the results may be biases. The second 
-one is that to increase the available data we were forced to select a one second extraction interval, which may
-not be optimal, as people may have different heart rates, also below the 60 bpm. Thereby by doing that 
-we may have samples with no information, as the heart sound may be not present in the interval.
-Another limitation we found is in the used features. We found MFCCs, while working well, to not be as discriminative
-for the distinction between Normal, Murmur and Extrasystole classes, which is where the model suffered the most.
-Lastly we have have to consider limits in the explainability of the model. 
-Indeed we showed the top MFCCs variationalong the waveform, idnetifying the points where the values may be
-more relevant, according to the SHAP results. However the model is not fed with the MFCC time series,
-but it relies on their mean across time. As a consequence the interpretation of the results may be done with 
-extreme caution. 
-
-There are then obvious limitations in the dataset representative power, which is the main 
-obstacle in the development of a model that can be used in real world scenarios.
+In our research, we developed two ensemble models, MLP\_Ensemble5 and MLP\_Ensemble2, to address the dual purpose of enhancing prevention and diagnosis
+(support model) of heart disease. For MLP\_Ensemble5, our focus was on minimizing false normals, ensuring that potential heart diseases are not overlooked.
+On the other hand, MLP\_Ensemble2 aimed to maximize overall predictive performance while incorporating explainability
+to provide valuable insights to medical professionals.\\
+Our experimentation involved various models and features, with careful consideration of correlation aspects,
+to achieve the best results. We utilized the PASCAL challenge dataset and addressed the class imbalance problem by aggregating diseases
+in one instance and employing appropriate metrics in another.\\
+Several studies have explored heart disease prediction using machine learning. Zhang et al. \cite{Zhang_Han_Deng_2017}
+utilized a Support Vector Machine (SVM) model with spectrogram features, achieving a precision of 0.76, while Deng et al. \cite{Deng_Han_2016}
+used SVM with Discrete Wavelet Transform (DWT) features, obtaining similar precision.
+Although these models are computationally efficient, their performance is limited.
+Advancements in deep learning, such as the Long Short-Term Memory (LSTM) model used by Raza et al. \cite{Raza_Mehmood_Ullah_Ahmad_Choi_On_2019}
+with 1D time series features, achieved an accuracy of 0.80 with Normal, Murmur, and Extrasystole classes.\\
+Significant improvements in accuracy were achieved using Convolutional Neural Networks (CNNs)
+by Alafif et al. \cite{Alafif_Boulares_Barnawi_Alafif_Althobaiti_Alferaidi_2020} and Noman et al. \cite{Noman_Ting_Salleh_Ombao_2019},
+although they only considered Normal and Abnormal classes. A more disease-specific approach was taken
+by Chen et al. \cite{Chen_Ren_Hao_Hu_2018}, who used a 2D CNN model with Wavelet Transform and Hilbert-Huang features, achieving an
+accuracy of 0.93 with Normal, Murmur, and Extrasystole classes. This high accuracy highlights the potential for
+improving our support model, which struggles to distinguish between Murmur, Normal, and Extrasystole classes.\\
+Direct comparisons between studies are challenging due to differences in datasets and class definitions.
+Our model uniquely considers five classes, making it distinct from others. Furthermore, the choice of evaluation metrics is crucial when dealing
+with imbalanced datasets, as accuracy can be misleading.\\
+Our research contributes to the literature by presenting two models. MLP\_Ensemble5 was optimized to minimize
+false normals while maintaining low computational costs and distinguishing between disease presence and artifact signals.
+MLP\_Ensemble2 was optimized for overall performance and introduced explainability measures to assist medical staff.\\
+Despite these advancements, our project faced limitations. The limited dataset size prevented the creation of a validation set, potentially biasing results.
+Additionally, to increase data availability, we selected a one-second extraction interval, which may not be optimal due to varying heart rates.
+This approach might result in samples lacking relevant information if the full cardiac cycle is not present within the interval.\\
+Feature selection also posed challenges. While MFCCs proved effective, they were not sufficiently discriminative for distinguishing between Normal,
+Murmur, and Extrasystole classes, where our model struggled the most. Furthermore, the explainability of the model has its constraints.
+We identified significant temporal regions on the waveform based on MFCC values within these regions. 
+According to SHAP values, these specific MFCC values help to classify the sample correctly.
+ However, the model only understands the average temporal values, not the instantaneous ones. 
+ Consequently, the explanation provided by the model is limited and requires further validation to be considered reliable.\\
+Finally, the representativeness of the dataset remains a major obstacle to developing a model suitable for real-world scenarios.
+Addressing these limitations in future research could enhance the applicability and reliability of our models in clinical settings.

@@ -7,12 +7,13 @@ diagnosing heart conditions at advanced stages when treatment options are limite
 Recent advancements in machine learning and deep learning have shown promise in healthcare applications, including heart disease detection.
 These technologies can offer accurate and early diagnosis, potentially improving patient outcomes. However, current models have limitations.
 For instance, simple models like SVM, used by Zhang et al. \cite{Zhang_Han_Deng_2017} and Deng et al. \cite{Deng_Han_2016}, have low precision,
-unsuitable for medical applications. Moreover, research by Alafif et al. \cite{Alafif_Boulares_Barnawi_Alafif_Althobaiti_Alferaidi_2020}
-and Noman et al. \cite{Noman_Ting_Salleh_Ombao_2019} focuses on identifying whether a heartbeat is normal or abnormal without specifying the
-type of disease or the location of the abnormality in the recording. Additionally, Chen et al.'s \cite{Chen_Ren_Hao_Hu_2018} model, despite its high accuracy of 0.93,
+unsuitable for medical applications. Moreover, researches by Alafif et al. \cite{Alafif_Boulares_Barnawi_Alafif_Althobaiti_Alferaidi_2020},
+Noman et al. \cite{Noman_Ting_Salleh_Ombao_2019} and Rath et al \cite{Rath_Mishra_Panda_Pal_2022}, focuses on identifying whether a heartbeat is normal or abnormal without specifying the
+type of disease. Additionally, Chen et al.'s \cite{Chen_Ren_Hao_Hu_2018} model, despite its high accuracy of 0.93,
 is too complex for practical usage and distinguishes only a few types of heart diseases, which is inadequate for comprehensive medical applications.\\
 To address these limitations, we propose a model that effectively identifies various heart diseases, including cases where no heart disease is present,
-while balancing model complexity with result accuracy. Considering the importance of early anomaly detection in heartbeats, we also propose a lightweight
+while balancing model complexity with result accuracy.\\
+Considering the importance of early anomaly detection in heartbeats, we also propose a lightweight
 model capable of detecting anomalies in heartbeat recordings. This approach allows individuals to use their smartphones to record their heartbeats and check for anomalies,
 facilitating timely consultation with a doctor for further diagnosis.
 
@@ -24,14 +25,15 @@ facilitating timely consultation with a doctor for further diagnosis.
     \centering
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
-        \textbf{Authors}                                                                & \textbf{Models}            & \textbf{Features}     & \textbf{Results} & \textbf{Anno} & \textbf{Dataset} \\ \hline
-        W. Zhang et al \cite{Zhang_Han_Deng_2017}                                       & SVM                        & Spectrogram           & 0.76 Precision   & 2017          & N, M, EH, AR     \\ \hline
-        SW. Deng et al \cite{Deng_Han_2016}                                             & SVM                        & DWT                   & 0.76 Precision   & 2016          & N, M, EH, AR     \\ \hline
-        A. Raza et al \cite{Raza_Mehmood_Ullah_Ahmad_Choi_On_2019}                      & LSTM                       & 1D time series        & 0.80 Accuracy    & 2019          & N, M, ES         \\ \hline
-        T. Alafif et al \cite{Alafif_Boulares_Barnawi_Alafif_Althobaiti_Alferaidi_2020} & 2D-CNN + transfer learning & MFCC                  & 0.89 Accuracy    & 2020          & N, A             \\ \hline
-        Noman et al \cite{Noman_Ting_Salleh_Ombao_2019}                                 & Ensemble CNN               & 1D time series + MFCC & 0.89 Accuracy    & 2019          & N, A             \\ \hline
-        Chen et al \cite{Chen_Ren_Hao_Hu_2018}                                          & 2D CNN                     & WT + Hilbert-Huang    & 0.93 Accuracy    & 2018          & N, M, ES         \\ \hline
-        Our Model                                                                       & Ensemble Model (MLPs + RF) & MFCC + Chroma + ZCR   & 0.88 Accuracy    & 2024          & AR, M, N, EH, ES \\ \hline
+        \textbf{Authors}                                                                & \textbf{Models}                & \textbf{Features}     & \textbf{Results} & \textbf{Anno} & \textbf{Dataset} \\ \hline
+        T. Alafif et al \cite{Alafif_Boulares_Barnawi_Alafif_Althobaiti_Alferaidi_2020} & 2D-CNN + transfer learning     & MFCC                  & 0.89 Accuracy    & 2020          & N, A             \\ \hline
+        Noman et al \cite{Noman_Ting_Salleh_Ombao_2019}                                 & Ensemble CNN                   & 1D time series + MFCC & 0.89 Accuracy    & 2019          & N, A             \\ \hline
+        Rath et al \cite{Rath_Mishra_Panda_Pal_2022}                                    & Ensamble (RF + MFO + XGB + EL) & MFCC + DWT            & 0.87 Accuracy    & 2022          & N, A             \\ \hline
+        A. Raza et al \cite{Raza_Mehmood_Ullah_Ahmad_Choi_On_2019}                      & LSTM                           & 1D time series        & 0.80 Accuracy    & 2019          & N, M, ES         \\ \hline
+        Chen et al \cite{Chen_Ren_Hao_Hu_2018}                                          & 2D CNN                         & WT + Hilbert-Huang    & 0.93 Accuracy    & 2018          & N, M, ES         \\ \hline
+        W. Zhang et al \cite{Zhang_Han_Deng_2017}                                       & SVM                            & Spectrogram           & 0.76 Precision   & 2017          & N, M, EH, AR     \\ \hline
+        SW. Deng et al \cite{Deng_Han_2016}                                             & SVM                            & DWT                   & 0.76 Precision   & 2016          & N, M, EH, AR     \\ \hline
+        Our Model                                                                       & Ensemble Model (MLPs + RF)     & MFCC + Chroma + ZCR   & 0.88 Accuracy    & 2024          & AR, M, N, EH, ES \\ \hline
     \end{tabular}
     \caption{Comparison of different models for classification. \textbf{Legend:} N: Normal, M: Murmur, EH: Extra Heartbeat, AR: Artifact, ES: Extra systoles, A: Abnormal}
 \end{table*}
