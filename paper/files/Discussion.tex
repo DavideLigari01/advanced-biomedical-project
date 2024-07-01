@@ -1,18 +1,46 @@
 \section{Discussion}
-\paragraph{Summary of Key Findings}
-The primary aim of this study was to evaluate various machine learning models for the prediction of heart disease. The results demonstrate that the MLP\_Ensemble5 model outperformed other models, achieving the highest AUC value of 0.96. Additionally, the MLP\_Ensemble5 model maintained superior performance across different FPR levels, further emphasizing its robustness. These findings align with the initial research hypothesis that ensemble models, which leverage the strengths of multiple individual models, can enhance predictive performance in medical diagnostics.
 
-\paragraph{Contextualization with Existing Research}
-The results obtained in this study contribute to the growing body of literature supporting the efficacy of ensemble learning techniques in medical diagnostics. Previous research has highlighted the advantages of ensemble methods in improving predictive accuracy and robustness. The superior performance of the MLP\_Ensemble5 model, as evidenced by its higher AUC and TPR values, corroborates these findings and suggests that such models can be effectively applied to heart disease prediction.
+We developed two ensemble models, MLP\_Ensemble5 and MLP\_Ensemble2, to address the two folded 
+purpose of assessing prevention and diagnosis (support model) of heart disease. In the former, we focused 
+on the minimization of false negatives, while in the latter, we aimed to maximize the 
+overall predictive performance, to then add explainability to the model.
+In both cases we tried several models and features, taking care of correlation aspects, 
+to find the best results. We used the PASCAL challenge dataset, handling the class imbalance
+problem aggregating diseases in one case and using proper metrics in the other.
+We added explainability to the support model, to provide insights to the medical staff.
 
-\paragraph{Unexpected Results}
-One of the unexpected findings was the relatively lower contribution of the MLP\_Rollercoaster model to the ensemble’s overall performance. This was surprising given its experimental validation in other contexts. The exact reasons for this discrepancy are unclear, but it may be due to the specific characteristics of the dataset used in this study or the interaction effects between different models in the ensemble. Further investigation is needed to understand the role of MLP\_Rollercoaster and similar models in ensemble frameworks.
+Several studies have been conducted on the prediction of heart disease using machine learning. 
+Zhang et al. \cite{Zhang_Han_Deng_2017} used a Support Vector Machine (SVM) model with spectrogram features to achieve a precision of 0.76,
+while Deng et al. \cite{Deng_Han_2016} used SVM with Discrete Wavelet Transform (DWT) features to achieve a similar precision. In both
+cases they used a model which is not computationally intensive, but with a limited performance.
+Some advancements have been made using deep learning models, such as the Long Short-Term Memory (LSTM) model used by Raza et al. \cite{Raza_Mehmood_Ullah_Ahmad_Choi_On_2019}
+with 1D time series features, achieving an accuracy of 0.80 with Normal, Murmur and Extrasystole classes.
+A significant improvement in the accuracy was achieved using CNNs by Alafif et al. \cite{Alafif_Boulares_Barnawi_Alafif_Althobaiti_Alferaidi_2020} and Noman et al. \cite{Noman_Ting_Salleh_Ombao_2019},
+however they only considered Normal and Abnormal classes, and the computational cost is higher. 
+A more disease specific approach was taken by Chen et al. \cite{Chen_Ren_Hao_Hu_2018}, who used a 2D CNN model with Wavelet Transform and Hilbert-Huang features, achieving an accuracy of 0.93 with Normal, Murmur and Extrasystole classes.
+This result may be investigated to improve the performance of our support model, which showed 
+a weakness in distinguishing between Murmur, Normal and Extrasystole classes. 
+In general a direct comparison is not possible, as in many cases the dataset used in the researches is different from ours, and the classes are not the same, with 
+our model being the only one considering 5 classes.
+A further thing to consider is the metric used to evaluate the performance. Indeed when dealing 
+with imbalanced datasets, the accuracy is not a good metric, as it may be misleading.
+In conclusion this research contributes to the literature by providing 
+two models. The first one, MLP\_Ensemble5, was optimized to minimize false normals while keeping
+a reduced computational cost and caring about distinguishing not only the presence or not of a disease but also
+whether the recorded signal is artifact or not. The second one, MLP\_Ensemble2, was optimized to maximize the overall performance,
+and introduced explainability measures to provide insights to the medical staff.
+The projects also suffered from some limitations. Two are realated to the limited size of the dataset. 
+The first one is the unability to create a validation set, thus the results may be biases. The second 
+one is that to increase the available data we were forced to select a one second extraction interval, which may
+not be optimal, as people may have different heart rates, also below the 60 bpm. Thereby by doing that 
+we may have samples with no information, as the heart sound may be not present in the interval.
+Another limitation we found is in the used features. We found MFCCs, while working well, to not be as discriminative
+for the distinction between Normal, Murmur and Extrasystole classes, which is where the model suffered the most.
+Lastly we have have to consider limits in the explainability of the model. 
+Indeed we showed the top MFCCs variationalong the waveform, idnetifying the points where the values may be
+more relevant, according to the SHAP results. However the model is not fed with the MFCC time series,
+but it relies on their mean across time. As a consequence the interpretation of the results may be done with 
+extreme caution. 
 
-\paragraph{Limitations}
-There are several limitations to this study that must be acknowledged. First, the dataset used may not be representative of the general population, potentially limiting the generalizability of the findings. Second, the models were evaluated based on their performance on a single dataset, which may not capture the variability and complexity present in real-world scenarios. Additionally, while the ensemble approach demonstrated high performance, it also increases computational complexity and resource requirements, which may pose challenges for implementation in resource-limited settings.
-
-\paragraph{Recommendations for Future Research}
-Future research should aim to address the limitations identified in this study. Expanding the dataset to include more diverse populations and evaluating the models on multiple datasets can enhance the generalizability of the findings. Moreover, exploring methods to optimize the computational efficiency of ensemble models will be crucial for their practical implementation. Investigating the underlying reasons for the varying contributions of individual models within an ensemble can also provide valuable insights for model improvement.
-
-\paragraph{Conclusion}
-In conclusion, this study highlights the potential of ensemble learning techniques in enhancing the predictive accuracy of heart disease diagnostics. The MLP\_Ensemble5 model, in particular, demonstrated superior performance across various metrics, reinforcing the value of integrating multiple models to leverage their individual strengths. Despite the limitations, the findings provide a promising direction for future research and practical applications in medical diagnostics, emphasizing the need for further exploration and optimization of ensemble approaches.
+There are then obvious limitations in the dataset representative power, which is the main 
+obstacle in the development of a model that can be used in real world scenarios.
