@@ -33,9 +33,10 @@ The optimal combination of thresholds was found to be: threshold 1 = 0, threshol
 \begin{table}[h]
     \centering
     \small
-    \begin{tabular}{|c|c|c|}
+    \begin{tabular}{|ll|}
         \hline
         \textbf{Threshold} & \textbf{Values}                 \\
+        \hline
         THRESHOLD 1        & 0 - 0.1 - 0.2 - 0.3 - 0.4 - 0.5 \\
         THRESHOLD 2        & 0.6 - 0.7 - 0.8 - 0.9 - 1       \\
         N° FEATURES        & 5 - 10 - 15 - 20 - 25 - 30 - 40 \\
@@ -54,7 +55,7 @@ compared to the model trained on all features. As demonstrated, the model traine
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\columnwidth]{../images/model_on_all_features_vs_model_on_best.png}
+    \includegraphics[width=\columnwidth]{../images/model_on_all_features_vs_model_on_best.png}
     \caption{Comparison of different metrics between the model on all features and the model on the filtered ones}
     \label{fig:comparison_model_on_all_features_vs_model_on_best}
 \end{figure}
@@ -69,7 +70,7 @@ while dark blue cells indicate high negative correlations.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\columnwidth]{../images/correlation_matrix.png}
+    \includegraphics[width=\columnwidth]{../images/correlation_matrix.png}
     \caption{Correlation matrix of the filtered features}
     \label{fig:correlation_matrix}
 \end{figure}

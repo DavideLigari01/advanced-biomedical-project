@@ -1,4 +1,28 @@
 \section{Conclusion}
-\subsection{Overall Impression}
+In this project, we have developed a machine learning model aimed at improving heart disease detection.
+Utilizing advanced ensemble techniques, we optimized two models : MLP\_Ensemble5 and MLP\_Ensemble2.
+The MLP\_Ensemble5 model was specifically fine-tuned to minimize false normals while maintaining low computational costs.
+On the other hand, MLP\_Ensemble2 focused on overall performance and incorporated explainability measures to aid medical professionals in decision-making.\\
+Despite the notable advancements, our project faced several limitations. The size of the dataset constrained our ability to create a validation set,
+which might have introduced biases in the results. Additionally, the one-second extraction interval used
+to increase data availability could have resulted in missing critical information from complete cardiac cycles.
+Feature selection posed another challenge, as Mel Frequency Cepstral Coefficients (MFCCs), while effective,
+were not sufficiently discriminative for certain heart conditions like Murmur and Extrasystole.\\
+Moreover, the model's explainability, while a significant feature, had limitations.
+The reliance on average temporal values rather than instantaneous ones meant that the explanations provided by the model were not always fully
+reliable and required further validation.
 
-\subsection{Future Work}
+\subsection{Future Works}
+Future research should address the limitations identified in this project to enhance the model's applicability and reliability in real-world clinical settings.
+Specifically, expanding the dataset and improving its representativeness will be crucial. A larger and more diverse dataset will capture a wider
+range of heart sound variations, improving the model's ability to generalize across different patient populations and conditions.
+Collaborating with multiple healthcare institutions to collect more comprehensive data, which includes diverse demographic and clinical characteristics, will be essential.\\
+Optimizing the extraction intervals to capture complete cardiac cycles could lead to better model performance.
+The current one-second intervals may miss critical information. By adjusting extraction intervals to encompass entire cardiac cycles,
+the model will analyze more comprehensive heartbeat patterns, enhancing its accuracy in detecting subtle abnormalities.\\
+Exploring alternative feature extraction techniques is another important area.
+While MFCCs have been effective, they may not capture all relevant features of heart sounds.
+Methods such as wavelet transforms or more complex neural features derived from deep learning models, such as CNNs or RNNs,
+could also be explored to enhance feature extraction and model performance.\\
+Finally, enhancing the model's explainability will be essential for its clinical adoption.
+Collaborating with medical professionals to analyze the results of the explainability procedure will ensure the medical relevance of the identified waveform zones.

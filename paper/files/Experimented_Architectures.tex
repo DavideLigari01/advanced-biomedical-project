@@ -3,50 +3,50 @@
 \begin{table}[ht!]
     \centering
     \footnotesize
-    \begin{tabular}{|l|l|}
+    \begin{tabular}{|ll|}
         \hline
-        \textbf{Name}           & \textbf{Architecture (hidden layers)}                                 \\ \hline
-        Random Forest                 & -                                                     \\ \hline
-        XGBoost                 & -                                                     \\ \hline
-        CatBoost                & -                                                     \\ \hline
-        LightGBM                & -                                                     \\ \hline
-        MLP\_Basic              & (128, 64, 32)                                         \\ \hline
-        MLP\_Ultra              & (512, 256, 128, 64, 32)                               \\ \hline
-        MLP\_Large              & (256, 128, 64, 32)                                    \\ \hline
-        MLP\_Small              & (64, 32)                                              \\ \hline
-        MLP\_Tiny               & (32, 16)                                              \\ \hline
-        MLP\_Reverse            & (32, 64, 128, 256, 512, 256, 128, 64, 32)             \\ \hline
-        MLP\_Bottleneck         & (512, 64, 32)                                         \\ \hline
-        MLP\_Rollercoaster      & (512, 128, 256, 128, 256, 64, 32)                     \\ \hline
-        MLP\_Hourglass          & (512, 256, 128, 64, 32, 64, 128, 256, 512)            \\ \hline
-        MLP\_Pyramid            & (1024, 512, 256, 128, 128, 128, 64, 32)               \\ \hline
-        MLP\_Wide               & (1024, 1024)                                          \\ \hline
-        MLP\_WideUltra          & (1024, 1024, 128, 32)                                 \\ \hline
-        MLP\_Sparse             & (32, 16, 8)                                           \\ \hline
-        MLP\_Dropout            & (128, 64, 32)                                         \\ \hline
-        MLP\_Ensemble1          & MLP\_Basic, Large, Ultra                    \\ \hline
-        MLP\_Ensemble2          & RandomForest, MLP\_Ultra                              \\ \hline
-        MLP\_Ensemble3          & MLP\_Rollercoaster, Large                        \\ \hline
-        MLP\_Ensemble4          & MLP\_Rollercoaster, Large, Ultra            \\ \hline
-        MLP\_Ensemble5          & RandomForest, MLP\_Ultra, Rollercoaster          \\ \hline
-        MLP\_Ensemble6          & MLP\_Rollercoaster, Large, Ultra, Wide \\ \hline
-        ALL\_Ensemble           & All models majority vote                              \\ \hline
-        CB\_ALL\_Ensemble       & All models CatBoost                                   \\ \hline
+        \textbf{Name}      & \textbf{Architecture (hidden layers)}      \\ \hline
+        Random Forest      & -                                          \\ 
+        XGBoost            & -                                          \\ 
+        CatBoost           & -                                          \\ 
+        LightGBM           & -                                          \\ 
+        MLP\_Basic         & (128, 64, 32)                              \\ 
+        MLP\_Ultra         & (512, 256, 128, 64, 32)                    \\ 
+        MLP\_Large         & (256, 128, 64, 32)                         \\ 
+        MLP\_Small         & (64, 32)                                   \\ 
+        MLP\_Tiny          & (32, 16)                                   \\ 
+        MLP\_Reverse       & (32, 64, 128, 256, 512, 256, 128, 64, 32)  \\ 
+        MLP\_Bottleneck    & (512, 64, 32)                              \\ 
+        MLP\_Rollercoaster & (512, 128, 256, 128, 256, 64, 32)          \\ 
+        MLP\_Hourglass     & (512, 256, 128, 64, 32, 64, 128, 256, 512) \\ 
+        MLP\_Pyramid       & (1024, 512, 256, 128, 128, 128, 64, 32)    \\ 
+        MLP\_Wide          & (1024, 1024)                               \\ 
+        MLP\_WideUltra     & (1024, 1024, 128, 32)                      \\ 
+        MLP\_Sparse        & (32, 16, 8)                                \\ 
+        MLP\_Dropout       & (128, 64, 32)                              \\ 
+        MLP\_Ensemble1     & MLP\_Basic, Large, Ultra                   \\ 
+        MLP\_Ensemble2     & RandomForest, MLP\_Ultra                   \\ 
+        MLP\_Ensemble3     & MLP\_Rollercoaster, Large                  \\ 
+        MLP\_Ensemble4     & MLP\_Rollercoaster, Large, Ultra           \\ 
+        MLP\_Ensemble5     & RandomForest, MLP\_Ultra, Rollercoaster    \\ 
+        MLP\_Ensemble6     & MLP\_Rollercoaster, Large, Ultra, Wide     \\ 
+        ALL\_Ensemble      & All models majority vote                   \\ 
+        CB\_ALL\_Ensemble  & All models CatBoost                        \\ \hline
     \end{tabular}
     \caption{Models names and architectures.}
     \label{tab:models}
 \end{table}
 
-The architectures of the models used in the experiments are detailed in Table \ref{tab:models}. 
-Special attention is given to the ensemble models, which combine predictions from multiple models 
+The architectures of the models used in the experiments are detailed in Table \ref{tab:models}.
+Special attention is given to the ensemble models, which combine predictions from multiple models
 to enhance overall performance.\\
 \noindent
-All MLP\_Ensemble models consist of the individual models listed in their architecture name. 
-These models’ predictions are combined using a soft voting strategy, where the final prediction is 
-determined by the argmax of the sum of the predicted probabilities from each model. This approach is 
+All MLP\_Ensemble models consist of the individual models listed in their architecture name.
+These models’ predictions are combined using a soft voting strategy, where the final prediction is
+determined by the argmax of the sum of the predicted probabilities from each model. This approach is
 effective when the models are well-calibrated and exhibit complementary strengths and weaknesses.\\
 \noindent
-The ALL\_Ensemble model aggregates the predictions of all individual models using a majority vote strategy. 
-In contrast, the CB\_ALL\_Ensemble model also considers all individual models but uses a CatBoost model to 
-aggregate the predictions. This allows for a more flexible voting strategy, potentially leading to improved 
+The ALL\_Ensemble model aggregates the predictions of all individual models using a majority vote strategy.
+In contrast, the CB\_ALL\_Ensemble model also considers all individual models but uses a CatBoost model to
+aggregate the predictions. This allows for a more flexible voting strategy, potentially leading to improved
 performance.
