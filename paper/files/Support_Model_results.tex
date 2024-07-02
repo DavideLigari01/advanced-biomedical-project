@@ -30,10 +30,10 @@ while MLP\_Ensemble3 performs best for extra systoles risk (orange).
 
 \subsubsection*{Best Model}
 
-The MLP\_Ensemble2 model stands out as the best-performing model among the support models. 
-To thoroughly understand its performance, we computed the confusion matrix on the test set, which is depicted in Figure \ref{fig:support_models_conf_matrix}. 
+The MLP\_Ensemble2 model stands out as the best-performing model among the support models.
+To thoroughly understand its performance, we computed the confusion matrix on the test set, which is depicted in Figure \ref{fig:support_models_conf_matrix}.
 The confusion matrix reveals that the model excels in recognizing artifacts (class 0) and extra systoles (class 1).
- However, it tends to confuse murmurs (class 2) and extra systoles (class 4) with normal heartbeats (class 3).
+However, it tends to confuse murmurs (class 2) and extra systoles (class 4) with normal heartbeats (class 3).
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../images/support_models_conf_matrix.png}
@@ -41,7 +41,7 @@ The confusion matrix reveals that the model excels in recognizing artifacts (cla
     \label{fig:support_models_conf_matrix}
 \end{figure}
 \noindent
-To further investigate this anomaly, we analyzed the mean values of the features within each class, as shown in Figure \ref{fig:mean_val_for_features}. 
+To further investigate this anomaly, we analyzed the mean values of the features within each class, as shown in Figure \ref{fig:mean_val_for_features}.
 The mean values represent the centroids of the classes in the feature space, providing insights into the distribution of the classes.
 \begin{figure}[H]
     \centering
@@ -50,7 +50,7 @@ The mean values represent the centroids of the classes in the feature space, pro
     \label{fig:mean_val_for_features}
 \end{figure}
 \noindent
-The analysis indicates that artifacts and extra heartbeats have distinctly different mean values compared to other classes, while murmurs, extra systoles, 
+The analysis indicates that artifacts and extra heartbeats have distinctly different mean values compared to other classes, while murmurs, extra systoles,
 and normal heartbeats exhibit similar mean values. To visualize this better, we employed T-SNE to map the features into a 2D space, as shown in Figure \ref{fig:t_sne_visualization}.
 
 \begin{figure}[H]
@@ -61,11 +61,16 @@ and normal heartbeats exhibit similar mean values. To visualize this better, we 
 \end{figure}
 \noindent
 The T-SNE visualization confirms the clear separation between artifacts and extra heartbeats from the other classes, while murmurs, extra systoles,
- and normal heartbeats are overlapped. This suggests that the features employed are not sufficiently distinct to differentiate normal heartbeats 
- from murmurs and extra systoles, explaining the model's tendency to confuse these classes.
+and normal heartbeats are overlapped. This suggests that the features employed are not sufficiently distinct to differentiate normal heartbeats
+from murmurs and extra systoles, explaining the model's tendency to confuse these classes.
 
 
 \subsubsection*{Explainability}
+
+To gain insights into the model's decision-making process, we computed the feature importance using permutation importance,
+as shown in Figure \ref{fig:permutation_feature_importance}. The figure reveals that the most important features are the MFCCs, particularly MFCC 3, 4, 8, and 6.
+The fact that the lower MFCCs are most important, suggest that the to distinguish between classes the model doesn't require fine details of the audio signal.
+Surprisingly, the zero crossing rate and chroma features are less important, indicating that the model relies heavily on the MFCCs to make predictions.
 
 \begin{figure}[H]
     \centering
@@ -74,10 +79,25 @@ The T-SNE visualization confirms the clear separation between artifacts and extr
     \label{fig:permutation_feature_importance}
 \end{figure}
 
+To provide a more intuitive understanding of the model's decision-making process, especially for clinicians who may need an explanation of the model's decisions,
+we identified the areas of the waveform most important for the model's prediction. This was done by first identifying the most important features
+for the classification of a single sample. \\
+Once the most important MFCCs were identified, we plotted the waveform of the sample along with these MFCCs.
+By observing the values of the MFCCs, we can pinpoint the areas of the waveform that are critical for the model's decision.
+Figures \ref{fig:extrahls_feature_importance} and \ref{fig:extrahls_waveform} illustrate this process for a single extra heartbeat sample. \\
+For this sample, the most important features are MFCC 8, 6, and 3. The bar plot shows that MFCC 8 and 6 have negative values,
+while MFCC 3 has a positive value, indicating that the significant areas of the waveform are where MFCC 3 is high and the others are low.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\columnwidth]{../images/extrahls_feature_importance.png}
     \caption{Feature importance for a single extra heart beat sample}
     \label{fig:extrahls_feature_importance}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{../images/extrahls_waveform.png}
+    \caption{Waveform of an extra heart beat sample, with most important MFCCs}
+    \label{fig:extrahls_waveform}
 \end{figure}
