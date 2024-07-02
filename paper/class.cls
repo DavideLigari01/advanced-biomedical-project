@@ -113,6 +113,7 @@
 \def\publicationdate#1{\gdef\@publicationdate{#1}}   % Publication Date
 \def\abstract#1{\gdef\@englishabstract{#1}}        % Abstract in English
 \def\github#1{\gdef\@github{#1}}
+\def\university#1{\gdef\@university{#1}}
 \def\keywords#1{\gdef\@englishkeywords{#1}}        % Keywords in English
 
 % Definition for contact data
@@ -178,16 +179,13 @@
       \noindent\varhrulefill[0.25mm] \par
       {\fontsize{20}{24} \selectfont \@title \par}
       \noindent\varhrulefill[0.25mm] \par
-      {\setlength{\tabcolsep}{0in}
-        \if@isblind
-        {\fontsize{12}{14} \selectfont Version for reviewers.} \\
-        \else
+      {
         \begin{tabular}[c]{c}%
           {\@author}                                                 \\
+          {\centering\fontsize{8}{10} \selectfont \@university}                \\
           {\fontsize{8}{10} \selectfont Github page: \url{\@github}} \\
           {\fontsize{8}{10} \selectfont Date: \@publicationdate}     \\
         \end{tabular}
-        \fi
       }
     \end{center}}% end of \parbox
   %\vspace{0.3cm}
@@ -237,7 +235,7 @@
 \renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
   {-12pt}%
   {6pt}%
-{\setlength\parindent{0em} \fontsize{11}{13} \selectfont \bfseries\textit}}%
+  {\setlength\parindent{0em} \fontsize{11}{13} \selectfont \bfseries\textit}}%
 
 
 
