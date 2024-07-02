@@ -6,9 +6,9 @@ indicating a potential bias as it overestimates model performance.\\
 Among the models, the MLP ensembles generally show superior performance compared to individual models.
 Notably, the MLP\_Ensemble2 model exhibits the highest performance, with a macro F1 score of 81.58 and an MCC of 81.53.
 This suggests that ensemble models effectively leverage the strengths of individual models to achieve optimal performance.
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=.9\columnwidth]{../images/support_models_metrics.png}
+    \includegraphics[width=\columnwidth]{../images/support_models_metrics.png}
     \caption{Metrics of the Support Models, computed on the test set}
     \label{fig:support_models_metrics}
 \end{figure}
@@ -21,7 +21,7 @@ From the figure, it's clear that no single model consistently outperforms others
 For instance, MLP\_Rollercoaster has the best overall risk score (blue) and excels in murmurs risk score (red),
 while MLP\_Ensemble3 performs best for extra systoles risk (orange).
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\columnwidth]{../images/support_models_risk_scores.png}
     \caption{Risk Scores of the Support Models}
@@ -34,16 +34,16 @@ The MLP\_Ensemble2 model stands out as the best-performing model among the suppo
 To thoroughly understand its performance, we computed the confusion matrix on the test set, which is depicted in Figure \ref{fig:support_models_conf_matrix}.
 The confusion matrix reveals that the model excels in recognizing artifacts (class 0) and extra systoles (class 1).
 However, it tends to confuse murmurs (class 2) and extra systoles (class 4) with normal heartbeats (class 3).
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\columnwidth]{../images/support_models_conf_matrix.png}
+    \includegraphics[width=\columnwidth]{../images/support_models_conf_matrix.png}
     \caption{Confusion Matrix of the MLP\_Ensemble2 model. Columns represent the true classes, while rows represent the predicted classes. Class 0: Artifacts, Class 1: Extra heartbeats, Class 2: Murmurs, Class 3: Normal, Class 4: Extra systoles.}
     \label{fig:support_models_conf_matrix}
 \end{figure}
 \noindent
 To further investigate this anomaly, we analyzed the mean values of the features within each class, as shown in Figure \ref{fig:mean_val_for_features}.
 The mean values represent the centroids of the classes in the feature space, providing insights into the distribution of the classes.
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\columnwidth]{../images/mean_val_for_features.png}
     \caption{Mean values for each feature within each class}
@@ -53,9 +53,9 @@ The mean values represent the centroids of the classes in the feature space, pro
 The analysis indicates that artifacts and extra heartbeats have distinctly different mean values compared to other classes, while murmurs, extra systoles,
 and normal heartbeats exhibit similar mean values. To visualize this better, we employed T-SNE to map the features into a 2D space, as shown in Figure \ref{fig:t_sne_visualization}.
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=.9\columnwidth]{../images/t-sne_feature_visualization.png}
+    \includegraphics[width=\columnwidth]{../images/t-sne_feature_visualization.png}
     \caption{T-SNE visualization of the features}
     \label{fig:t_sne_visualization}
 \end{figure}
@@ -72,9 +72,9 @@ as shown in Figure \ref{fig:permutation_feature_importance}. The figure reveals 
 The fact that the lower MFCCs are most important, suggest that the to distinguish between classes the model doesn't require fine details of the audio signal.
 Surprisingly, the zero crossing rate and chroma features are less important, indicating that the model relies heavily on the MFCCs to make predictions.
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
-    \includegraphics[width=.8\columnwidth]{../images/permutation_feature_importance.png}
+    \includegraphics[width=\columnwidth]{../images/permutation_feature_importance.png}
     \caption{Feature Importance computed with Permutation Importance}
     \label{fig:permutation_feature_importance}
 \end{figure}
@@ -90,14 +90,14 @@ while MFCC 3 has a positive value, indicating that the significant areas of the 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\columnwidth]{../images/extrahls_feature_importance.png}
+    \includegraphics[width=\columnwidth]{../images/extrahls_feature_importance.png}
     \caption{Feature importance for a single extra heart beat sample}
     \label{fig:extrahls_feature_importance}
 \end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\columnwidth]{../images/extrahls_waveform.png}
+    \includegraphics[width=\columnwidth]{../images/extrahls_waveform.png}
     \caption{Waveform of an extra heart beat sample, with most important MFCCs}
     \label{fig:extrahls_waveform}
 \end{figure}
