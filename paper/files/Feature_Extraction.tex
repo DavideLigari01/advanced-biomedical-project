@@ -1,5 +1,5 @@
 \subsection{Feature Extraction}
-s demonstrated by \cite{Raza_Mehmood_Ullah_Ahmad_Choi_On_2019} and \cite{Chen_Sun_Chen_Xie_Wu_Xu_2021}, MFCCs
+As demonstrated by \cite{Raza_Mehmood_Ullah_Ahmad_Choi_On_2019} and \cite{Chen_Sun_Chen_Xie_Wu_Xu_2021}, MFCCs
 are highly effective features for heartbeat classification. In addition to MFCCs,
 we incorporated other features to capture various characteristics of heart sounds, enhancing the classification accuracy.
 The features used are explained in the following section.
@@ -16,7 +16,7 @@ such as the presence of murmurs or other anomalies.
 
 \vspace{0.3cm}\noindent
 \textbf{Chroma STFT}\newline
-Chroma features represent the 12 different pitch classes of music (e.g., C, C\#, D, etc.).
+Chroma features represent the 12 different pitch classes of music.
 They are particularly useful for capturing harmonic and melodic characteristics in music.
 By mapping audio signals onto the chroma scale, these features can identify pitches regardless
 of the octave, making them useful for analyzing harmonic content in heart sounds.
@@ -99,7 +99,7 @@ in Algorithm \ref{alg:sr_choice}.
         \EndFor
 
         \State \textbf{Output:}
-        \State Given all the results, group by \texttt{model} and average the values of a specific \texttt{metric} across \texttt{features}
+        \State Given all the results, group by \texttt{model} and average the values of a specific \texttt{metric} across \texttt{features} and \texttt{intervals}
 
     \end{algorithmic}
 \end{algorithm}
@@ -128,7 +128,7 @@ however it also reduced the number of samples, impeding a correct training and e
 As a consequence, we picked a 1-second interval as a compromise.
 
 \subsubsection*{Number of Features per Type} % Davide
-Now the focus, the focus is on identifying the optimal number of features for different types of audio features (MFCC, Chroma, CQT, etc.).
+Now the focus is on identifying the optimal number of features for different types of audio features (MFCC, Chroma, CQT, etc.).
 Each type of feature can consist of a varying number of individual features, and it is crucial to determine the optimal number to maximize
 the model's performance. Proper feature selection is vital because it directly impacts the efficiency, accuracy,
 and generalizability of the machine learning model. Including too many features can lead to overfitting, increased computational costs,
@@ -144,11 +144,10 @@ This was achieved using a `One Model per Feature' approach, which involved the f
 \begin{algorithm}
     \caption{Feature Optimization Process}
     \begin{algorithmic}[1]
-        \State \textbf{Step 1:} Extract feature sets with varying sizes: 12, 20, 30, 40, 60, 70, 90, and 120 features.
-        \State \textbf{Step 2:} Train a separate model for each feature type and feature set size.
-        \State \textbf{Step 3:} For each feature set, train three different models using three classifiers: SVM, Random Forest,
+        \State \textbf{Step 1:} Extract feature sets with varying sizes: 12, 20, 30, 40, 60, 70, 90, and 120 features for each type.
+        \State \textbf{Step 2:} For each feature set, train three classifiers: SVM, Random Forest,
         and Logistic Regression.
-        \State \textbf{Step 4:} Evaluate the performance of each model.
+        \State \textbf{Step 3:} Evaluate the performance of each model.
     \end{algorithmic}
 \end{algorithm}
 

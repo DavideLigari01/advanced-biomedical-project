@@ -3,8 +3,6 @@ The dataset for this project was obtained from a Kaggle repository titled \texti
 which in turn sources its data from the PASCAL Classifying Heart Sounds Challenge 2011 (CHSC2011) \cite{pascal-chsc-2011}.
 This dataset comprises audio recordings of heartbeats, categorized into different types of heart sounds.
 Specifically, the dataset consists of 5 types of recordings: Normal Heart Sounds, Murmur Sounds, Extra Heart Sounds, Extrasystole Sounds, and Artifacts.
-Data has been gathered from the general public via the iStethoscope Pro iPhone app and from a clinic trial in hospitals using the digital stethoscope DigiScope.
-
 \subsubsection*{Type of Sources} %Davide
 The dataset comprises audio recordings collected from three distinct sources:
 \paragraph{Type A:}
@@ -132,12 +130,12 @@ Figure \ref{fig:DataExp_num_durations}, illustrates the significant class imbala
 which have far fewer samples compared to other classes.
 This imbalance poses a challenge for the classification task,
 as the model may struggle to learn and accurately predict the underrepresented classes due to the insufficient number of training examples.
-To mitigate this issue, several strategies are employed.\\
+To mitigate this issue, several strategies are employed (see Section \ref{sec:data_augmentation}).\\
 Data augmentation techniques are applied to artificially increase the size of the dataset
 by creating modified versions of the existing audio files through methods such as pitch shifting, time stretching, and adding noise.
 Additionally, the original audio recordings are segmented into smaller clips, which not only increases the number of samples available for training but
 also provides the model with more varied examples of heart sounds, enhancing its ability to generalize across different heart sound variations.\\
-Furthermore, the effectiveness of oversampling and undersampling techniques is tested. Oversampling involves duplicating samples from the minority classes
+Furthermore, the effectiveness of oversampling and undersampling techniques is tested. Oversampling involves introducing samples in the minority classes
 to increase their representation in the training set, while undersampling involves reducing the number of samples from the majority classes
 to balance the dataset. The data is split into training and testing sets with an 80\% - 20\% ratio, respectively.\\
 A validation set is omitted due to the low number of samples available, ensuring that the maximum amount of data is used for training and testing the model.

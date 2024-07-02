@@ -9,7 +9,7 @@ The second filter focuses on the correlation among the features themselves.
 It counts, for each feature, the number of other features with which it has a correlation above a certain threshold. Features with a
 number of correlations above a specified threshold are then removed.\\
 
-\begin{algorithm}
+\begin{algorithm}[h]
     \caption{Feature Selection Process}
     \begin{algorithmic}[1]
         \State \textbf{Step 1:} Compute  the normal test (D'Agostino Pearson).
@@ -27,7 +27,7 @@ number of correlations above a specified threshold are then removed.\\
 
 Threshold values were chosen empirically and the filters were applied using the combinations shown in Table \ref{tab:threshold_values}.
 Using the filtered data, Random Forest models were trained and evaluated, as Random Forest was found to be the best performing model.
-The optimal combination of thresholds was found to be: threshold 1 = 0, threshold 2 = 0.6 and number of features = 30, resulting in 30 features.
+The optimal combination of thresholds was found to be: threshold 1 = 0, threshold 2 = 0.6 and number of features = 30, resulting in 41 features.
 
 \rowcolors{2}{blue!8}{blue!18}
 \begin{table}[h]

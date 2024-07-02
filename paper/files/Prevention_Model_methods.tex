@@ -2,19 +2,16 @@
 The goal of the prevention model is to provide an accessible tool for the early diagnosis of heart 
 diseases, potentially usable by non-experts. Therefore, it is crucial to develop a model that 
 minimizes the number of false normal predictions to accurately indicate the presence or not
-of disease or identify artifacts in the provided data.
-
+of disease or identify artifacts in the provided data.\\
 To achieve this, different heart diseases were grouped together, transforming the problem 
 into a 3-class classification task: normal, disease, and artifact. Grouping the diseases not 
 only simplified the classification but also balanced the class distribution. The data was 
 divided into training and testing sets in an 80-20 ratio, and various models were evaluated, 
-as shown in Table \ref{tab:models}.
-
+as shown in Table \ref{tab:models}.\\
 The primary metrics for evaluating the models were the ROC-AUC score, false positive rate (FPR), 
 and true positive rate (TPR), with F1-score and accuracy as secondary metrics. 
 To adapt binary metrics for multi-class classification, the one-vs-rest strategy was employed. 
-Specifically, we focused on the normal-vs-rest case to minimize false normal predictions.
-
+Specifically, we focused on the normal-vs-rest case to minimize false normal predictions.\\
 In summary, each model was trained on the 3-class classification problem but was evaluated based on 
 its binary classification performance (normal-vs-rest). The best model was selected based on its 
 ROC-AUC score and performance at specific FPR levels (1\%, 5\%, 10\%, and 20\%). The objective was 
