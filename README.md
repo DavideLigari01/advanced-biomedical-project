@@ -1,4 +1,21 @@
-# Heart Disease Recognition from Heart Beat Audio Signals
+<h1 align="center">Heart Disease Recognition</h1>
+
+<p align="center">
+  <b>A Machine Learning solution to detect heart diseases from raw audio heartbeat recordings</b>
+  <br>
+  <i>Providing a prevention and support tool</i>
+</p>
+
+<p align="center">
+  <a href="#overview">Overview</a> •
+  <a href="#repository-structure">Repository Structure</a> •
+  <a href="#problem-description-and-goals">Problem Statement</a> •
+  <a href="#methodology">Methodology</a> •
+  <a href="#results">Results</a> •
+  <a href="#license">License</a>
+</p>
+
+---
 
 ## Overview
 
