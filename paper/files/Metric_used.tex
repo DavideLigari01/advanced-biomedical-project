@@ -22,7 +22,7 @@ MCC evaluates performance by considering all classes:
 \[
     \text{MCC} = \frac{\sum_k \sum_l \sum_m C_{kk} C_{lm} - C_{kl} C_{mk}}{\sqrt{\sum_k \left( \sum_l C_{kl} \right) \left( \sum_{k' \ne k} \sum_{l'} C_{k'l'} \right)} \sqrt{\sum_k \left( \sum_l C_{lk} \right) \left( \sum_{k' \ne k} \sum_{l'} C_{l'k'} \right)}}
 \]
-This comprehensive metric accounts for true and false predictions, making it robust for imbalanced datasets.
+According to \citeauthor{Boughorbel2017Optimal} \cite{Boughorbel2017Optimal}, this metric accounts for true and false predictions, making it robust for imbalanced datasets.
 
 \paragraph{Precision and Recall}
 Precision measures the accuracy of positive predictions:
@@ -33,15 +33,13 @@ Recall measures the proportion of actual positives correctly identified:
 \[
     \text{Recall} = \frac{TP}{TP + FN}
 \]
-Micro variants aggregate these metrics across all classes, while macro variants average them per class, 
-offering insights into individual class performance.
-
 \paragraph{F1 Score}
 The F1 score balances precision and recall:
 \[
     \text{F1 Score} = 2 \times \frac{\text{Precision} \times \text{Recall}}{\text{Precision} + \text{Recall}}
 \]
-Micro and macro variants provide overall and class-specific performance evaluations, respectively.
+Micro variants aggregate these metrics across all classes, while macro variants average them per class, 
+offering insights into individual class performance.
 
 \paragraph{ROC Curve and AUC}
 For binary classification, the ROC curve plots true positive rate against false positive rate, and AUC summarizes the model's discriminatory ability,
